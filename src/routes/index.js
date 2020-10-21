@@ -1,11 +1,11 @@
 import React from 'react';
-// import AppRoutes from './App.routes';
-import AuthRoutes from './Auth.routes'
+
+import SobreRoutes from './Sobre.routes';
+import EntrarRoutes from './Entrar.routes'
 
 
 const Routes = () => {
-    return <AuthRoutes />
+    return <EntrarRoutes />
 }
-
 
 export default Routes;

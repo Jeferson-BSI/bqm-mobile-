@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 
 
-function Home() {
+function Sobre() {
     return (
         <Text>
             Wellcome to Home!
@@ -10,4 +10,4 @@ function Home() {
     )
 };
 
-export default Home;
+export default Sobre;
