@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     conteiner: {
         backgroundColor: 'white',
         borderBottomWidth: 1,
-        borderBottomColor: '#c5c5c5',
+        borderBottomColor: '#0b2639',
         marginTop: 5,
         marginBottom: 12,
         elevation: 1,

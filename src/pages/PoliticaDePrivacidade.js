@@ -2,21 +2,21 @@ import React from 'react';
 
 import {StyleSheet } from 'react-native';
 
-
 import Body from '../components/Body';
 import Nav from '../components/Nav';
 import Info from '../components/Info';
 import Main from '../components/Main';
 
-function Sobre({ navigation }) {
+
+function PoliticaDePrivacidade({ navigation }) {
 
     return (
  
         <Body>
 
-            <Nav>SOBRE</Nav>
+            <Nav>POLITICADEPRIVACIDADE</Nav>
 
-            <Info>SOBRE</Info>
+            <Info>POLÍTICA DE PRIVACIDADE</Info>
 
             <Main>
 
@@ -25,14 +25,13 @@ function Sobre({ navigation }) {
         </Body>
        
     )
-
 };
 
 
 const styles = StyleSheet.create({
- 
-    
+
+   
 });
 
 
-export default Sobre;
+export default PoliticaDePrivacidade;
