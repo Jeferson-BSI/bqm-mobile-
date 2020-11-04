@@ -1,16 +1,63 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
 
+
+import Api from '../components/Api';
 
 import Body from '../components/Body';
 import Nav from '../components/Nav';
 import Info from '../components/Info';
 import Main from '../components/Main';
 
+import { useNavigation } from '@react-navigation/native';
 
-function Inicio({ navigation }) {
+function Inicio() {
 
+	
+	const navigation = useNavigation();
+
+	async function CheckLogin(){
+
+
+		let UserToken = ''
+
+	    try {
+	    
+	    	UserToken = await AsyncStorage.getItem('user_token')
+
+	    	//alert(UserToken)
+
+	    	if (UserToken !== '') {
+
+	    		let UserNivelDeAcesso = await AsyncStorage.getItem('user_nivel_de_acesso')
+
+		        if (UserNivelDeAcesso == 'epsilon') {
+
+		            navigation.navigate('Epsilon', {token:UserToken})
+		        }
+
+	    	} else {
+	    		//alert('Não tem dados em cache')
+	    	}
+	      
+	    } catch (_err) {
+	        //alert('Não foi possivel buscar as informacoes em cache')
+	    }
+
+	}
+
+	React.useEffect(() => {
+   		const unsubscribe = navigation.addListener('focus', () => {
+   			CheckLogin()
+	    });
+
+	    return unsubscribe;
+
+  	}, [navigation]);
+
+
+ 
     return (
  
         <Body>
