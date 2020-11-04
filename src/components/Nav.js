@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, AsyncStorage} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 
@@ -138,8 +138,11 @@ const Nav = (props) => {
       }
 
       async function NavFivePress_5(){
-        alert('NavFivePress_5')
-       // navigation.navigate('Entrar')
+        //apaga o cache de login
+        await AsyncStorage.setItem('access', '')
+        await AsyncStorage.setItem('refresh', '')
+        //volta para tela inicial
+        navigation.navigate('Inicio')
       }
 
 
@@ -328,31 +331,31 @@ const styles = StyleSheet.create({
     NavOne_5:{
       flex: 1,
       height:70,
-      margin:15
+      margin:'3.5%'
     },
 
     NavTwo_5:{
       flex: 1,
       height:70,
-      margin:15
+      margin:'3.5%'
     },
 
     NavThree_5:{
       flex: 1,
       height:70,
-      margin:15
+      margin:'3.5%'
     },
 
     NavFour_5:{
       flex: 1,
       height:70,
-      margin:15
+      margin:'3.5%'
     },
 
     NavFive_5:{
       flex: 1,
       height:70,
-      margin:15
+      margin:'3.5%'
     },
 
 

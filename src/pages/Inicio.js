@@ -1,16 +1,88 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
 
+
+import Api from '../components/Api';
 
 import Body from '../components/Body';
 import Nav from '../components/Nav';
 import Info from '../components/Info';
 import Main from '../components/Main';
 
+import { useNavigation } from '@react-navigation/native';
 
-function Inicio({ navigation }) {
+function Inicio() {
 
+	
+	const navigation = useNavigation();
+
+ 
+	async function CheckLogin(){
+
+		///let Access =''
+
+		let Refresh = ''
+
+	    try {
+	    
+	    	//Access = await AsyncStorage.getItem('access')
+
+	    	Refresh = await AsyncStorage.getItem('refresh')
+
+	    	//alert(Refresh)
+
+	    	if (Refresh !== '') {
+
+			    try {
+
+			      const response = await Api.post('/token/bearer/refresh/', {
+			        "refresh": Refresh,
+			      });
+
+			      const { access } = response.data;
+
+			      //alert(access)
+
+			      if (access) {
+				    try {
+				    
+				    	await AsyncStorage.setItem('access', access)
+				    	//await AsyncStorage.setItem('refresh', refresh)
+
+				    	navigation.navigate('Epsilon', {token:access})
+				     
+				    } catch (_err) {
+				         //alert('Não foi possivel atualizar as informacoes em cache')
+				    }
+			      }
+
+			    } catch (_err) {
+
+			        //alert('Não foi possivel conectar ao servidor')
+			    }
+
+	    	} else {
+	    		//alert('Não tem dados em cache')
+	    	}
+	      
+	    } catch (_err) {
+	        //alert('Não foi possivel buscar as informacoes em cache')
+	    }
+
+	}
+
+	React.useEffect(() => {
+   		const unsubscribe = navigation.addListener('focus', () => {
+   			CheckLogin()
+	    });
+
+	    return unsubscribe;
+
+  	}, [navigation]);
+
+
+ 
     return (
  
         <Body>

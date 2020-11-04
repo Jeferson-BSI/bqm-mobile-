@@ -1,4 +1,4 @@
-import React, {useState}  from 'react';
+import React, {useState, useEffect}  from 'react';
 
 import FormRow from '../components/FormRow';
 import Api from '../components/Api';
@@ -12,7 +12,8 @@ import {
   Text, View,ScrollView,
   StyleSheet, Image,
   TextInput, TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
@@ -29,6 +30,70 @@ function Entrar() {
 
   const navigation = useNavigation();
 
+  async function CheckLogin(){
+
+    ///let Access =''
+
+    let Refresh = ''
+
+      try {
+      
+        //Access = await AsyncStorage.getItem('access')
+
+        Refresh = await AsyncStorage.getItem('refresh')
+
+        //alert(Refresh)
+
+        if (Refresh !== '') {
+
+          try {
+
+            const response = await Api.post('/token/bearer/refresh/', {
+              "refresh": Refresh,
+            });
+
+            const { access } = response.data;
+
+            //alert(access)
+
+            if (access) {
+            try {
+            
+              await AsyncStorage.setItem('access', access)
+              //await AsyncStorage.setItem('refresh', refresh)
+
+              navigation.navigate('Epsilon', {token:access})
+             
+            } catch (_err) {
+                 //alert('Não foi possivel atualizar as informacoes em cache')
+            }
+            }
+
+          } catch (_err) {
+
+              //alert('Não foi possivel conectar ao servidor')
+          }
+
+        } else {
+          //alert('Não tem dados em cache')
+        }
+        
+      } catch (_err) {
+          //alert('Não foi possivel buscar as informacoes em cache')
+      }
+
+  }
+
+  React.useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        CheckLogin()
+      });
+
+      return unsubscribe;
+
+    }, [navigation]);
+
+
   var token = ''
 
   async function ApiGetEtapa(){
@@ -43,8 +108,6 @@ function Entrar() {
       const response = await ApiGet.get('/etapa/');
       const { results } = response.data;
 
-
-
         alert(results[4].etapa_nome)
 
       } catch (_err) {
@@ -58,14 +121,9 @@ function Entrar() {
 
   async function handlesLogin(){
   
-
-    navigation.navigate('Epsilon', {token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImUzZDAzNjEzLTRhZjItNDVjYi05NDU1LWFjZDg3MzdjYmFjNCIsImlhdCI6MTYwNDI4MjYyMywiZXhwIjoxNjA0Mjg2MjIzfQ.jIOj88HQ5HAWXmi946Hzizoo-CYZ-vPQIGxbfJJFfdE'})
-
-    /*
-
     try {
 
-      //exibir algun botão de carreganf
+      
       setShouldShow(!shouldShow)
       setLoginShow(!loginShow)
 
@@ -77,7 +135,22 @@ function Entrar() {
       const { access, refresh } = response.data;
 
       if (access) {
-        navigation.navigate('Epsilon', {token:access})
+
+        try {
+        
+          //salva as informacoes em cache
+          await AsyncStorage.setItem('access', access)
+          await AsyncStorage.setItem('refresh', refresh)
+
+          setShouldShow(shouldShow)
+          setLoginShow(loginShow)
+
+          navigation.navigate('Epsilon', {token:access})
+         
+        } catch (_err) {
+             alert('Não foi possivel salvar as informacoes em cache')
+        }
+
       } else {
         
         setShouldShow(shouldShow)
@@ -88,7 +161,7 @@ function Entrar() {
 
       }
 
-      } catch (_err) {
+    } catch (_err) {
 
         setShouldShow(shouldShow)
         setLoginShow(loginShow)
@@ -96,7 +169,7 @@ function Entrar() {
         alert('Não foi possivel conectar ao servidor')
     }
 
-    */
+    
   }
  
   const [email, onChangeEmail] = React.useState('epsilon@bq.mat.br');
