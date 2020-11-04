@@ -1,4 +1,4 @@
-import React, {useState}  from 'react';
+import React, {useState, useEffect}  from 'react';
 
 import FormRow from '../components/FormRow';
 import Api from '../components/Api';
@@ -12,7 +12,8 @@ import {
   Text, View,ScrollView,
   StyleSheet, Image,
   TextInput, TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
@@ -29,66 +30,143 @@ function Entrar() {
 
   const navigation = useNavigation();
 
-  var token = ''
+  async function CheckLogin(){
 
-  async function ApiGetEtapa(){
+
+    let UserToken = ''
+
+      try {
+      
+        UserToken = await AsyncStorage.getItem('user_token')
+
+        //alert(UserToken)
+
+        if (UserToken !== '') {
+
+          let UserNivelDeAcesso = await AsyncStorage.getItem('user_nivel_de_acesso')
+
+            if (UserNivelDeAcesso == 'epsilon') {
+
+                navigation.navigate('Epsilon', {token:UserToken})
+            }
+
+        } else {
+          //alert('Não tem dados em cache')
+        }
+        
+      } catch (_err) {
+          //alert('Não foi possivel buscar as informacoes em cache')
+      }
+
+  }
+
+  React.useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        CheckLogin()
+      });
+
+      return unsubscribe;
+
+    }, [navigation]);
+
+
+
+
+  let UserToken = ''
+  let UserId    = ''
+
+  async function ApiGetUsuario(){
 
     const ApiGet = axios.create({
       baseURL: 'https://bq.mat.br/api/v1',
       timeout: 30,
-      headers: {'Authorization': 'Bearer ' + token}
+      headers: {'Authorization': 'Token ' + UserToken}
     });
 
     try {
-      const response = await ApiGet.get('/etapa/');
-      const { results } = response.data;
+        
+        const response = await ApiGet.get('/usuario/'+UserId+'/');
+        
+        const { nivel_de_acesso } = response.data;
 
 
+        await AsyncStorage.setItem('user_nivel_de_acesso', nivel_de_acesso)
 
-        alert(results[4].etapa_nome)
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
+
+        //vefifica o nivel de acesso para carregar a pagina correta
+        //isso serve para ter suporte a usuarios de diferentes niveis
+
+        if (nivel_de_acesso == 'epsilon') {
+
+            navigation.navigate('Epsilon', {token:UserToken})
+        } else {
+          alert('Este aplicativo não possui acesso a este nivel de usuario')
+        }
 
       } catch (_err) {
-        alert('Não foi possivel buscar as etapas')
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
+
+
+        alert('Não foi possivel completar o login')
     }
 
   }
 
   const [shouldShow, setShouldShow] = useState(false);
+
   const [loginShow, setLoginShow] = useState(true);
 
   async function handlesLogin(){
   
-
-    navigation.navigate('Epsilon', {token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImUzZDAzNjEzLTRhZjItNDVjYi05NDU1LWFjZDg3MzdjYmFjNCIsImlhdCI6MTYwNDI4MjYyMywiZXhwIjoxNjA0Mjg2MjIzfQ.jIOj88HQ5HAWXmi946Hzizoo-CYZ-vPQIGxbfJJFfdE'})
-
-    /*
-
     try {
 
-      //exibir algun botão de carreganf
       setShouldShow(!shouldShow)
       setLoginShow(!loginShow)
 
-      const response = await Api.post('/token/bearer/', {
-        "email": User.email,
+      const response = await Api.post('/token/', {
+        "username": User.email,
         "password": User.senha,
       });
 
-      const { access, refresh } = response.data;
 
-      if (access) {
-        navigation.navigate('Epsilon', {token:access})
-      } else {
-        
+     if (response.data.token) {
+
+        const {token, id} = response.data;
+
         setShouldShow(shouldShow)
         setLoginShow(loginShow)
 
-        alert('Houve um problema com o login, verifique suas credenciais!')
+        try {
+        
+          //salva as informacoes em cache
+          await AsyncStorage.setItem('user_token', token)
+          await AsyncStorage.setItem('user_id', ''+id)
 
+          UserToken = token
+          UserId = ''+id
 
-      }
+          ApiGetUsuario()
+         
+        } catch (_err) {
+             alert('Não foi possivel salvar as informacoes em cache')
+        }
 
-      } catch (_err) {
+     } else {
+
+        const {non_field_errors} = response.data;
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
+
+        alert(non_field_errors)
+    }
+
+    } catch (_err) {
 
         setShouldShow(shouldShow)
         setLoginShow(loginShow)
@@ -96,7 +174,6 @@ function Entrar() {
         alert('Não foi possivel conectar ao servidor')
     }
 
-    */
   }
  
   const [email, onChangeEmail] = React.useState('epsilon@bq.mat.br');
