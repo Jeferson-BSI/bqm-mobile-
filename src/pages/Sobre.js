@@ -12,52 +12,27 @@ import Main from '../components/Main';
 
 function Sobre() {
 
-
 	const navigation = useNavigation();
 
 	async function CheckLogin(){
 
-		///let Access =''
 
-		let Refresh = ''
+		let UserToken = ''
 
 	    try {
 	    
-	    	//Access = await AsyncStorage.getItem('access')
+	    	UserToken = await AsyncStorage.getItem('user_token')
 
-	    	Refresh = await AsyncStorage.getItem('refresh')
+	    	//alert(UserToken)
 
-	    	//alert(Refresh)
+	    	if (UserToken !== '') {
 
-	    	if (Refresh !== '') {
+	    		let UserNivelDeAcesso = await AsyncStorage.getItem('user_nivel_de_acesso')
 
-			    try {
+		        if (UserNivelDeAcesso == 'epsilon') {
 
-			      const response = await Api.post('/token/bearer/refresh/', {
-			        "refresh": Refresh,
-			      });
-
-			      const { access } = response.data;
-
-			      //alert(access)
-
-			      if (access) {
-				    try {
-				    
-				    	await AsyncStorage.setItem('access', access)
-				    	//await AsyncStorage.setItem('refresh', refresh)
-
-				    	navigation.navigate('Epsilon', {token:access})
-				     
-				    } catch (_err) {
-				         //alert('Não foi possivel atualizar as informacoes em cache')
-				    }
-			      }
-
-			    } catch (_err) {
-
-			        //alert('Não foi possivel conectar ao servidor')
-			    }
+		            navigation.navigate('Epsilon', {token:UserToken})
+		        }
 
 	    	} else {
 	    		//alert('Não tem dados em cache')

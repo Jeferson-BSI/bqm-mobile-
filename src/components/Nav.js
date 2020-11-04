@@ -139,8 +139,9 @@ const Nav = (props) => {
 
       async function NavFivePress_5(){
         //apaga o cache de login
-        await AsyncStorage.setItem('access', '')
-        await AsyncStorage.setItem('refresh', '')
+        await AsyncStorage.setItem('user_token', '')
+        await AsyncStorage.setItem('user_id', '')
+        await AsyncStorage.setItem('user_nivel_de_acesso', '')
         //volta para tela inicial
         navigation.navigate('Inicio')
       }

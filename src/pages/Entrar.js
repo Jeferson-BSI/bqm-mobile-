@@ -32,47 +32,23 @@ function Entrar() {
 
   async function CheckLogin(){
 
-    ///let Access =''
 
-    let Refresh = ''
+    let UserToken = ''
 
       try {
       
-        //Access = await AsyncStorage.getItem('access')
+        UserToken = await AsyncStorage.getItem('user_token')
 
-        Refresh = await AsyncStorage.getItem('refresh')
+        //alert(UserToken)
 
-        //alert(Refresh)
+        if (UserToken !== '') {
 
-        if (Refresh !== '') {
+          let UserNivelDeAcesso = await AsyncStorage.getItem('user_nivel_de_acesso')
 
-          try {
+            if (UserNivelDeAcesso == 'epsilon') {
 
-            const response = await Api.post('/token/bearer/refresh/', {
-              "refresh": Refresh,
-            });
-
-            const { access } = response.data;
-
-            //alert(access)
-
-            if (access) {
-            try {
-            
-              await AsyncStorage.setItem('access', access)
-              //await AsyncStorage.setItem('refresh', refresh)
-
-              navigation.navigate('Epsilon', {token:access})
-             
-            } catch (_err) {
-                 //alert('Não foi possivel atualizar as informacoes em cache')
+                navigation.navigate('Epsilon', {token:UserToken})
             }
-            }
-
-          } catch (_err) {
-
-              //alert('Não foi possivel conectar ao servidor')
-          }
 
         } else {
           //alert('Não tem dados em cache')
@@ -94,72 +70,101 @@ function Entrar() {
     }, [navigation]);
 
 
-  var token = ''
 
-  async function ApiGetEtapa(){
+
+  let UserToken = ''
+  let UserId    = ''
+
+  async function ApiGetUsuario(){
 
     const ApiGet = axios.create({
       baseURL: 'https://bq.mat.br/api/v1',
       timeout: 30,
-      headers: {'Authorization': 'Bearer ' + token}
+      headers: {'Authorization': 'Token ' + UserToken}
     });
 
     try {
-      const response = await ApiGet.get('/etapa/');
-      const { results } = response.data;
+        
+        const response = await ApiGet.get('/usuario/'+UserId+'/');
+        
+        const { nivel_de_acesso } = response.data;
 
-        alert(results[4].etapa_nome)
+
+        await AsyncStorage.setItem('user_nivel_de_acesso', nivel_de_acesso)
+
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
+
+        //vefifica o nivel de acesso para carregar a pagina correta
+        //isso serve para ter suporte a usuarios de diferentes niveis
+
+        if (nivel_de_acesso == 'epsilon') {
+
+            navigation.navigate('Epsilon', {token:UserToken})
+        } else {
+          alert('Este aplicativo não possui acesso a este nivel de usuario')
+        }
 
       } catch (_err) {
-        alert('Não foi possivel buscar as etapas')
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
+
+
+        alert('Não foi possivel completar o login')
     }
 
   }
 
   const [shouldShow, setShouldShow] = useState(false);
+
   const [loginShow, setLoginShow] = useState(true);
 
   async function handlesLogin(){
   
     try {
 
-      
       setShouldShow(!shouldShow)
       setLoginShow(!loginShow)
 
-      const response = await Api.post('/token/bearer/', {
-        "email": User.email,
+      const response = await Api.post('/token/', {
+        "username": User.email,
         "password": User.senha,
       });
 
-      const { access, refresh } = response.data;
 
-      if (access) {
+     if (response.data.token) {
+
+        const {token, id} = response.data;
+
+        setShouldShow(shouldShow)
+        setLoginShow(loginShow)
 
         try {
         
           //salva as informacoes em cache
-          await AsyncStorage.setItem('access', access)
-          await AsyncStorage.setItem('refresh', refresh)
+          await AsyncStorage.setItem('user_token', token)
+          await AsyncStorage.setItem('user_id', ''+id)
 
-          setShouldShow(shouldShow)
-          setLoginShow(loginShow)
+          UserToken = token
+          UserId = ''+id
 
-          navigation.navigate('Epsilon', {token:access})
+          ApiGetUsuario()
          
         } catch (_err) {
              alert('Não foi possivel salvar as informacoes em cache')
         }
 
-      } else {
-        
+     } else {
+
+        const {non_field_errors} = response.data;
+
         setShouldShow(shouldShow)
         setLoginShow(loginShow)
 
-        alert('Houve um problema com o login, verifique suas credenciais!')
-
-
-      }
+        alert(non_field_errors)
+    }
 
     } catch (_err) {
 
@@ -169,7 +174,6 @@ function Entrar() {
         alert('Não foi possivel conectar ao servidor')
     }
 
-    
   }
  
   const [email, onChangeEmail] = React.useState('epsilon@bq.mat.br');
