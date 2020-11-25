@@ -16,10 +16,10 @@ import {
   AsyncStorage
 } from 'react-native';
 
+
 import { SvgXml } from 'react-native-svg';
 
 import axios from 'axios';
-
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -71,7 +71,6 @@ function Entrar() {
 
 
 
-
   let UserToken = ''
   let UserId    = ''
 
@@ -114,7 +113,6 @@ function Entrar() {
 
         alert('Não foi possivel completar o login')
     }
-
   }
 
   const [shouldShow, setShouldShow] = useState(false);
@@ -236,8 +234,6 @@ function Entrar() {
                 </View>
               ) : null}
 
-
-
             </Main>
 
         </Body>
@@ -284,6 +280,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       borderRadius: 10,
       marginTop: 20,
+      elevation: 1
   },
 
   mainTouchableOpacityText: {

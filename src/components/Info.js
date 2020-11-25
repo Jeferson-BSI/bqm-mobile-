@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8f8',
         height: 40,
         marginTop: 0,
+        padding: 5,
         alignItems: 'stretch',
         justifyContent: 'center',
     },
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     InfoText: {
         fontSize: 17,
         color:'#0b2639',
-        paddingLeft:10
+        paddingLeft:10,
     },
 });
 

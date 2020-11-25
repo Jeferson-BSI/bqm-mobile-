@@ -3,6 +3,7 @@ import { StyleSheet, View, AsyncStorage} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 
+
 const Nav = (props) => {
 
   const navigation = useNavigation();
@@ -118,19 +119,17 @@ const Nav = (props) => {
 
 
       async function NavOnePress_5(){
-        alert('NavOnePress_5')
-        //navigation.navigate('Sobre')
+        navigation.navigate('Configuracao')
+        //alert('NavOnePress_')
       }
 
       async function NavTwoPress_5(){
-        alert('NavTwoPress_5')
-       // navigation.navigate('PoliticaDePrivacidade')
+        navigation.navigate('Bdquestoes')
       }
 
       async function NavThreePress_5(){
-        alert('NavThreePress_5')
-        // navigation.navigate('Entrar')
         navigation.navigate('GerarAvaliacao')
+        //alert('NavThreePress_5')
       }
 
       async function NavFourPress_5(){
@@ -300,8 +299,9 @@ const Nav = (props) => {
 const styles = StyleSheet.create({
     nav: {
       backgroundColor: '#d9d9d9',
-      height: 70,
+      maxHeight: 70,
       marginTop: 0,
+      width:'100%',
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',

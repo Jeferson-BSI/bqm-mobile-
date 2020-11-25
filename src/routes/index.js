@@ -4,7 +4,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Inicio from '../pages/Inicio';
 import Entrar from '../pages/Entrar';
 import Sobre from '../pages/Sobre';
-import GerarAvaliacao from '../pages/GerarAvaliacao'
+import GerarAvaliacao from '../pages/GerarAvaliacao';
+import Configuracao from '../pages/usuario/Configuracao';
+import Bdquestoes from '../pages/usuario/Bdquestoes';
+import AddQuestoes from '../pages/usuario/AddQuestoes';
+import ListarQuestoes from '../pages/usuario/ListarQuestoes';
+import ModficarSenha from '../pages/usuario/ModficarSenha';
 
 import Epsilon from '../pages/usuario/Epsilon';
 
@@ -16,7 +21,8 @@ import Header from '../components/Header'
 
 
 
-import {   Easing  } from "react-native";
+import { Easing } from "react-native";
+
 
 const config = {
   animation: 'timing',
@@ -31,9 +37,19 @@ const RoutesStack = createStackNavigator();
  
 const Routes = () => (
     <RoutesStack.Navigator
-        initialRouteName="Inicio"
+        initialRouteName= "Inicio"
         screenOptions={{ header: () => <Header /> }}>
-
+{/* 
+        <RoutesStack.Screen
+            name='Configuracao'
+            component={ Configuracao }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        /> */}
 
         <RoutesStack.Screen
             name='Inicio'
@@ -82,6 +98,29 @@ const Routes = () => (
         />
 
         <RoutesStack.Screen
+            name='Configuracao'
+            component={ Configuracao }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        />
+
+        <RoutesStack.Screen
+            name='Bdquestoes'
+            component={ Bdquestoes }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        />
+        
+
+        <RoutesStack.Screen
             name='GerarAvaliacao'
             component={ GerarAvaliacao }
             options={{
@@ -93,8 +132,41 @@ const Routes = () => (
         />
 
         <RoutesStack.Screen
+            name='AddQuestoes'
+            component={ AddQuestoes }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        />
+
+        <RoutesStack.Screen
+            name='ListarQuestoes'
+            component={ ListarQuestoes }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}
+        />
+
+        <RoutesStack.Screen
             name='PoliticaDePrivacidade'
             component={ PoliticaDePrivacidade }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        />
+
+        <RoutesStack.Screen
+            name='ModficarSenha'
+            component={ ModficarSenha }
             options={{
                 transitionSpec: {
                   open: config,

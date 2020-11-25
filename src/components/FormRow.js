@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         elevation: 1,
         //paddingHorizontal: 100,
         width: '90%',
-        borderRadius: 10
+        borderRadius: 10,
     },
 });
 
