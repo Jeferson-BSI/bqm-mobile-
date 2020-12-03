@@ -101,7 +101,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: "center",
         width: '100%',
-        marginTop: 20
+        marginTop: 20,
     },
 
     bnt:{
@@ -117,6 +117,7 @@ const Styles = StyleSheet.create({
         borderColor: '#002907',
         backgroundColor: '#ebebeb',//'#e8e8e8'//'#F4F5F6',
         elevation: 3,
+        borderRadius: 8,
     },
 
     bntText: {

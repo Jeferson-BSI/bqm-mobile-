@@ -4,24 +4,45 @@ import { View, Picker, StyleSheet} from 'react-native';
 
 
 const selectedUnidade = (props) => {
-    const tematica = ['Numeros', 'Álgebra', 'Geometria', 'Gradezas e medidas', 'Probabilidade e estatística']
- 
+    const {data, op, fun} = props
+    const { pages } = JSON.parse(data)
+        let pickerItem = null
+    if(op.etapa != '0' || op.etapa != ''){
+            pickerItem = pages.map(tematica =>{
+                if(op.etapa == tematica.etapa && op.ano == tematica.ano){
+                    return(
+                        <Picker.Item 
+                        key={tematica.unidade_tematica} 
+                        label={tematica.unidade_tematica_nome} 
+                        value={tematica.unidade_tematica} />
+                        )}
+                })}
+                else{ pickerItem = null}
+    
     return(
         <View style={Styles.select}>
             <Picker 
             style={{width: '100%', height: '100%'}}
             selectedValue={props.selectedValue}
-            onValueChange={(itemValue, itemIndex) => { 
-            props.onValueChange(itemValue)}}
+            //onValueChange={(i) => 'gsh'}
+             onValueChange={(itemValue) =>( 
+             fun(itemValue))}
             >
-                <Picker.Item label='Selecione a Unidade temática' value='' />
-            {
-                (props.op != '0' && props.op != '')
-                    ?tematica.map(tematica =>(
-                        <Picker.Item key={tematica} label={tematica} value={tematica} />
-                    ))
-                    :null
-            }
+            {/* <Picker.Item key={0} label='Selecione a Unidade temática' value='' /> */}
+            {pickerItem}
+            {/* {
+            (op.etapa != '0' || op.etapa != '')
+                ?pages.map(tematica =>{
+                    if(op.etapa == tematica.etapa && op.ano == tematica.ano){
+                        return(
+                            <Picker.Item 
+                            //key={tematica.unidade_tematica} 
+                            label={tematica.unidade_tematica_nome} 
+                            value={tematica.unidade_tematica} />
+                            )}
+                    })
+                :null
+            } */}
 
             </Picker>
         </View>

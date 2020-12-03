@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import { SvgXml } from 'react-native-svg';
+import QuestionStorage from '../../funções/QuestionStorage';
 
 
-function Bdquestoes({ navigation }) {
+function Bdquestoes({ navigation}) {
+
 
     const IconAdd = `      
         <svg width="100%" height="60%" viewBox="0 0 576 512">
@@ -52,6 +54,35 @@ function Bdquestoes({ navigation }) {
         </svg> `;
 
 
+    const checkData = async() =>{
+        const list = ['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']
+        try {
+            const value = await AsyncStorage.getItem('objetodeconhecimento');
+            if (value == null) {
+                for(let op in list){
+                    QuestionStorage(list[op])}
+            }
+        } catch (error) {
+            alert(error+' => CheckData')
+        }
+    }
+
+    checkData()
+
+    const navAddQuestoes = async() =>{
+        try {
+            const value = await AsyncStorage.multiGet(['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']);
+            if (value !== null) {
+                navigation.navigate('AddQuestoes', value)
+
+            }
+        } 
+        catch (error) {
+            alert(error+' => aqui')
+        }
+        
+    };
+
     return (
         <View style={Styles.body}>
             <Nav>EPSILON</Nav>
@@ -61,7 +92,7 @@ function Bdquestoes({ navigation }) {
             <View style={Styles.main}>
                 <TouchableOpacity 
                     style={Styles.touchable}
-                    onPress={() => navigation.navigate('AddQuestoes')}
+                    onPress={navAddQuestoes}
                 >
                     <SvgXml style={Styles.iconStyle} xml={ IconAdd } />
                     <Text style={Styles.iconText}> Adicionar questões </Text> 
@@ -80,11 +111,10 @@ function Bdquestoes({ navigation }) {
     )
 }
 
-export default Bdquestoes;
 
 
 const Styles = StyleSheet.create({
-
+    
     body: {
         flex: 1,
         backgroundColor: '#f8f8f8',
@@ -92,14 +122,14 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
+    
     main: {
         flex: 1,
         marginTop: 0,
         backgroundColor: '#f8f8f8',
         alignItems: 'center',
     },
-
+    
     touchable: {
         flex: 1,
         alignItems: 'center',
@@ -113,18 +143,21 @@ const Styles = StyleSheet.create({
         borderColor: '#0b2639',
         elevation: 3,
     },
-
+    
     iconStyle: {
         //backgroundColor: 'red',
         paddingLeft: 300,
-
+        
     },
-
+    
     iconText: {
         fontSize: 17,
         color:'#0b2639',
         paddingRight: 20,
-
+        
     },
-
+    
 });
+
+
+export default Bdquestoes;

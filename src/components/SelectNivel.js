@@ -3,6 +3,8 @@ import { View, Picker, StyleSheet} from 'react-native';
 
 
 const selectNivel = (props) => {
+    const {data, op } = props
+    const { results } = JSON.parse(data)
      
     return(
         <View style={Styles.select}>
@@ -12,13 +14,16 @@ const selectNivel = (props) => {
             onValueChange={(itemValue, itemIndex) => { 
             props.onValueChange(itemValue)}}
             >
-            {(props.op != '0')
-                ?[
-                 <Picker.Item key={1} label='Fácil' value='Fácil' />,
-                 <Picker.Item key={2} label='Médio' value='Médio' />,
-                 <Picker.Item key={3} label='Difícil' value='Difícil' />]
-                :<Picker.Item label='Selecione o Nível' value='' />
-                }   
+            {
+            (op != '0' || op != '')
+                ?results.map(tematica =>(
+                            <Picker.Item 
+                            key={tematica.nivel_de_dificuldade} 
+                            label={tematica.nivel_de_dificuldade_nome} 
+                            value={tematica.nivel_de_dificuldade} />
+                        ))
+                :null
+            } 
             </Picker>
         </View>
     )

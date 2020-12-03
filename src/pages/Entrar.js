@@ -1,4 +1,4 @@
-import React, {useState, useEffect}  from 'react';
+import React, {useState}  from 'react';
 
 import FormRow from '../components/FormRow';
 import Api from '../components/Api';
@@ -9,8 +9,8 @@ import Info from '../components/Info';
 import Main from '../components/Main';
 
 import {
-  Text, View, ScrollView,
-  StyleSheet, Image,
+  Text, View,
+  StyleSheet,
   TextInput, TouchableOpacity,
   ActivityIndicator,
   AsyncStorage

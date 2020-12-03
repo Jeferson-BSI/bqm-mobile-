@@ -1,28 +1,43 @@
 import React from 'react';
-import { View, Picker, StyleSheet} from 'react-native';
+import { View, 
+    Picker, 
+    StyleSheet,
+    AsyncStorage,
+    Alert
 
+} from 'react-native';
 
 
 const selectedEtapa = (props) => {
+    const { results } = JSON.parse(props.data)
 
-        return(
+    return(
 
-            <View style={Styles.select}>
-                <Picker 
-                style={{width: '100%', height: '100%'}}
-                selectedValue={props.selectedValue}
-                onValueChange={(itemValue, itemIndex) => { 
-                props.onValueChange(itemValue)}}
-                >
-                <Picker.Item label='Selecione a Etapa de Educação' value='' />
-                <Picker.Item label='Educação infantil - Bebês ' value='1' />
-                <Picker.Item label='Educação infantil - Crianças pequenas ' value='2' />
-                <Picker.Item label='Educação infantil - Crianças pequenas' value='3' />
-                <Picker.Item label='Ensino fundamental - Anos iniciais' value='4' />
-                <Picker.Item label='Ensino fundamental - Anos finais' value='5' />
-                <Picker.Item label='Ensino médio' value='6' />
-                </Picker>
-            </View>
+        <View style={Styles.select}>
+            <Picker 
+            style={{width: '100%', height: '100%'}}
+            selectedValue={props.selectedValue}
+            onValueChange={(itemValue, itemIndex) => { 
+            props.onValueChange(itemValue)}}
+            >
+            <Picker.Item label='Selecione a Etapa de Educação' value='' />
+            {(results !== null)
+                ?results.map(etapa =>(
+                    <Picker.Item key={etapa.etapa} label={etapa.etapa_nome} value={etapa.etapa}/>
+                ))
+                :<Picker.Item label='Selecione a Etapa de Educação' value='' />
+            }   
+
+
+            {/* <Picker.Item label='Selecione a Etapa de Educação' value='' />
+            <Picker.Item label='Educação infantil - Bebês ' value='1' />
+            <Picker.Item label='Educação infantil - Crianças pequenas ' value='2' />
+            <Picker.Item label='Educação infantil - Crianças pequenas' value='3' />
+            <Picker.Item label='Ensino fundamental - Anos iniciais' value='4' />
+            <Picker.Item label='Ensino fundamental - Anos finais' value='5' />
+            <Picker.Item label='Ensino médio' value='6' />*/}
+            </Picker> 
+        </View>
         )
 };
 

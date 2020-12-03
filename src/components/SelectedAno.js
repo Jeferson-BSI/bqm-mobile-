@@ -7,7 +7,7 @@ const selectedAno = (props) => {
     const PickerItem = (i,f) => {
         const list = [<Picker.Item  key={0} label='Selecione o ano' value='' />]
             for ( i ; i <= f; i++){
-                list.push(<Picker.Item key={i}label={`${i}`} value={`${i}`} />);
+                list.push(<Picker.Item key={i}label={`${i}`} value={i} />);
             }
             return list
         }

@@ -8,8 +8,8 @@ import Info from '../../components/Info';
 
 
 function ListarQuestoes() {
-                    
-                    
+
+
     return (
         <View style={Styles.body}>
             <Nav>EPSILON</Nav>

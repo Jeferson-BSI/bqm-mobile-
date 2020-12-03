@@ -16,13 +16,14 @@ import SelectNivel from '../../components/SelectNivel';
 import FormRow from '../../components/FormRow';
 
 
-
-const AddQuestoes = () => {
-    const [ selectedEtapa, setSelectedEtapa ] = useState('0')
-    const [ selectedAno, setSelectedAno ] = useState('0')
-    const [ selectedUnidade, setSelectedUnidade ] = useState('0')
-    const [ selectedConhecimento, setSelectedConhecimento ] = useState('0')
-    const [ selectedNivel, setSelectednivel ] = useState('0')
+const AddQuestoes = ({ route }) => {
+    const { params } = route
+    //alert(JSON.stringify(route.params))
+    const [ selectedEtapa, setSelectedEtapa ] = useState('')
+    const [ selectedAno, setSelectedAno ] = useState('')
+    const [ selectedUnidade, setSelectedUnidade ] = useState('')
+    const [ selectedConhecimento, setSelectedConhecimento ] = useState('')
+    const [ selectedNivel, setSelectednivel ] = useState('')
     const [ urlImag, setUrlImage ] = useState(null)
     const [ pergunta, setPerguta ] = useState('')
     const [ resposta, setResposta ] = useState('')
@@ -51,6 +52,7 @@ const AddQuestoes = () => {
                 <Text style={Styles.text} >Etapa</Text>
                 <SelectedEtapa
                 selectedValue={selectedEtapa}
+                data={params[0][1]}
                 onValueChange={setSelectedEtapa}/>
 
                 <Text style={Styles.text} >Ano</Text>
@@ -62,20 +64,24 @@ const AddQuestoes = () => {
                 <Text style={Styles.text} >Unidade temática</Text>
                 <SelectUnidade
                 selectedValue={selectedUnidade}
-                op={selectedAno}
+                op={{etapa: selectedEtapa, ano: selectedAno}}
+                data={params[1][1]}
+                fun={setSelectedUnidade}
                 onValueChange={setSelectedUnidade}                
                 />
 
                 <Text style={Styles.text} >Objeto de conhecimento</Text>
                 <SelectConhecimento
                 selectedValue={selectedConhecimento}
-                op={selectedUnidade}
+                op={{etapa: selectedEtapa, ano: selectedAno, unidade: selectedUnidade}}
+                data={params[2][1]}
                 onValueChange={setSelectedConhecimento}                
                 />
 
                 <Text style={Styles.text} >Nível de dificuldade</Text>
                 <SelectNivel
                 op={selectedConhecimento}
+                data={params[3][1]}
                 selectedValue={selectedNivel}
                 onValueChange={setSelectednivel}
                 />
@@ -116,10 +122,11 @@ const AddQuestoes = () => {
                 <TouchableOpacity 
                 style={Styles.bnt}
                 onPress={() => (
-                    alert( `${Questao.etapa} ${Questao.ano} ${Questao.unidade} ${Questao.conhecimento} ${Questao.nivel} ${Questao.imag} ${Questao.pergunta} ${Questao.resposta}`)
+                    //alert( `${Questao.etapa} ${Questao.ano} ${Questao.unidade} ${Questao.conhecimento} ${Questao.nivel} ${Questao.imag} ${Questao.pergunta} ${Questao.resposta}`)
+                    alert('')
                 )}
                 >
-                    <Text style={{color: 'white', fontSize: 18,}}> Cadastrar questao </Text> 
+                    <Text style={{color: 'white', fontSize: 18,}}> Cadastrar questão </Text> 
                 </TouchableOpacity>
 
             </ScrollView>
