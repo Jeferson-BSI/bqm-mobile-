@@ -1,48 +1,76 @@
-import React from 'react';
-import { View, Picker, StyleSheet} from 'react-native';
+import React, {useState, useEffect}from 'react';
+import { View, Picker, StyleSheet, AsyncStorage} from 'react-native';
 
+import QuestionStorage from '../funções/QuestionStorage';
 
 
 const selectedUnidade = (props) => {
-    const {data, op, fun} = props
-    const { pages } = JSON.parse(data)
-        let pickerItem = null
-    if(op.etapa != '0' || op.etapa != ''){
-            pickerItem = pages.map(tematica =>{
-                if(op.etapa == tematica.etapa && op.ano == tematica.ano){
-                    return(
-                        <Picker.Item 
-                        key={tematica.unidade_tematica} 
-                        label={tematica.unidade_tematica_nome} 
-                        value={tematica.unidade_tematica} />
-                        )}
-                })}
-                else{ pickerItem = null}
+    const { op } = props
+    const [ data, setData] = useState(null);
+
+    async function getData(){
+        try {
+            let dados = await AsyncStorage.getItem('unidadetematica');
+            if(dados === null){
+                QuestionStorage('unidadetematica');
+            }
     
+            dados = await AsyncStorage.getItem('unidadetematica');
+            setData(JSON.parse(dados))
+        }
+        catch (erro){
+            alert(erro)
+        }
+    };
+
+    useEffect(() =>{getData()}, [])
+
+    function PickerItems(){
+        let dados = []
+        for(let tematica of data){
+            if(op.etapa == tematica.etapa && op.ano == tematica.ano){
+                dados = dados.concat( <Picker.Item 
+                    key={tematica.unidade_tematica} 
+                    label={tematica.unidade_tematica_nome} 
+                    value={tematica.unidade_tematica} />)
+            }
+
+        }
+
+        return dados
+    }
+
     return(
         <View style={Styles.select}>
             <Picker 
             style={{width: '100%', height: '100%'}}
             selectedValue={props.selectedValue}
-            //onValueChange={(i) => 'gsh'}
-             onValueChange={(itemValue) =>( 
-             fun(itemValue))}
+            onValueChange={(itemValue) => { 
+                props.onValueChange(itemValue)}}
             >
-            {/* <Picker.Item key={0} label='Selecione a Unidade temática' value='' /> */}
-            {pickerItem}
+            <Picker.Item key={0} label='Selecione a Unidade temática' value='' />
             {/* {
-            (op.etapa != '0' || op.etapa != '')
-                ?pages.map(tematica =>{
-                    if(op.etapa == tematica.etapa && op.ano == tematica.ano){
-                        return(
-                            <Picker.Item 
-                            //key={tematica.unidade_tematica} 
-                            label={tematica.unidade_tematica_nome} 
-                            value={tematica.unidade_tematica} />
-                            )}
-                    })
+             (data !== null)
+             //
+                ?(op.etapa !== '' && op.ano !== '')
+                    ?data.map(tematica =>{
+                        let cont = 1
+                        if(op.etapa == tematica.etapa && op.ano == tematica.ano){
+                            return(
+                                <Picker.Item 
+                                key={tematica.unidade_tematica} 
+                                label={tematica.unidade_tematica_nome} 
+                                value={tematica.unidade_tematica} />
+                                )}
+                        })
+                    :<Picker.Item key={0} label='Selecione a Unidade temática' value='' />
                 :null
             } */}
+            {
+                (data !== null)
+                    ?PickerItems()
+                    :null
+            }
 
             </Picker>
         </View>
@@ -56,13 +84,16 @@ const Styles = StyleSheet.create({
         flex: 1,
         alignItems: "flex-end",
         justifyContent: 'center',
+
         width: '90%',
         maxHeight: 40,
-        color: 'red',
+        marginBottom: 15,
+        marginLeft: '2%',
+
         borderRadius: 5,
         borderWidth: 2,
         borderColor: '#0b2639',
-        marginBottom: 15
+
     },
 });
 

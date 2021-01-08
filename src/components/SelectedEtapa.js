@@ -1,15 +1,32 @@
-import React from 'react';
-import { View, 
+import React, {useState, useEffect } from 'react';
+import { 
+    View, 
     Picker, 
     StyleSheet,
     AsyncStorage,
-    Alert
-
 } from 'react-native';
+import QuestionStorage from '../funções/QuestionStorage';
 
 
 const selectedEtapa = (props) => {
-    const { results } = JSON.parse(props.data)
+    const [ data, setData] = useState(null);
+    
+    async function getData(){
+        try {
+            let dados = await AsyncStorage.getItem('etapa');
+            if(dados === null){
+                QuestionStorage('etapa');
+            }
+    
+            dados = await AsyncStorage.getItem('etapa');
+            setData(JSON.parse(dados))
+        }
+        catch (erro){
+            alert(erro)
+        }
+    };
+
+    useEffect(() =>{getData()}, [])
 
     return(
 
@@ -17,18 +34,16 @@ const selectedEtapa = (props) => {
             <Picker 
             style={{width: '100%', height: '100%'}}
             selectedValue={props.selectedValue}
-            onValueChange={(itemValue, itemIndex) => { 
+            onValueChange={(itemValue) => {
             props.onValueChange(itemValue)}}
             >
             <Picker.Item label='Selecione a Etapa de Educação' value='' />
-            {(results !== null)
-                ?results.map(etapa =>(
+            {(data !== null)
+                ?data.map(etapa =>(
                     <Picker.Item key={etapa.etapa} label={etapa.etapa_nome} value={etapa.etapa}/>
                 ))
                 :<Picker.Item label='Selecione a Etapa de Educação' value='' />
             }   
-
-
             {/* <Picker.Item label='Selecione a Etapa de Educação' value='' />
             <Picker.Item label='Educação infantil - Bebês ' value='1' />
             <Picker.Item label='Educação infantil - Crianças pequenas ' value='2' />
@@ -49,14 +64,16 @@ const Styles = StyleSheet.create({
         flex: 1,
         alignItems: "flex-end",
         justifyContent: 'center',
+
         width: '90%',
         maxHeight: 40,
-        color: 'red',
+        marginBottom: 15,
+        marginLeft: '2%',
+
         borderRadius: 5,
         borderWidth: 2,
         borderColor: '#0b2639',
-        elevation: 3,
-        marginBottom: 15
+
 
     },
 });

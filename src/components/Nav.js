@@ -133,7 +133,8 @@ const Nav = (props) => {
       }
 
       async function NavFourPress_5(){
-        alert('NavFourPress_5')
+        navigation.navigate('Manual')
+        //alert('NavFourPress_5')
       }
 
       async function NavFivePress_5(){

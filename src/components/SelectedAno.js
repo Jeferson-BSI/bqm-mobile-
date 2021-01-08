@@ -3,6 +3,8 @@ import { View, Picker, StyleSheet} from 'react-native';
 
 
 const selectedAno = (props) => {
+    //alert(props.selectedValue)
+
 
     const PickerItem = (i,f) => {
         const list = [<Picker.Item  key={0} label='Selecione o ano' value='' />]
@@ -18,7 +20,7 @@ const selectedAno = (props) => {
             <Picker 
             style={{width: '100%', height: '100%'}}
             selectedValue={props.selectedValue}
-            onValueChange={(itemValue, itemIndex) => { 
+            onValueChange={(itemValue) => { 
             props.onValueChange(itemValue)}}
             >
 

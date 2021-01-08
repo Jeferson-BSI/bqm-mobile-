@@ -4,12 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Inicio from '../pages/Inicio';
 import Entrar from '../pages/Entrar';
 import Sobre from '../pages/Sobre';
-import GerarAvaliacao from '../pages/GerarAvaliacao';
+import GerarAvaliacao from '../pages/usuario/GerarAvaliacao';
 import Configuracao from '../pages/usuario/Configuracao';
 import Bdquestoes from '../pages/usuario/Bdquestoes';
 import AddQuestoes from '../pages/usuario/AddQuestoes';
 import ListarQuestoes from '../pages/usuario/ListarQuestoes';
 import ModficarSenha from '../pages/usuario/ModficarSenha';
+import Manual from '../pages/usuario/Manual';
 
 import Epsilon from '../pages/usuario/Epsilon';
 
@@ -39,17 +40,6 @@ const Routes = () => (
     <RoutesStack.Navigator
         initialRouteName= "Inicio"
         screenOptions={{ header: () => <Header /> }}>
-{/* 
-        <RoutesStack.Screen
-            name='Configuracao'
-            component={ Configuracao }
-            options={{
-                transitionSpec: {
-                  open: config,
-                  close: config,
-                },
-            }}            
-        /> */}
 
         <RoutesStack.Screen
             name='Inicio'
@@ -123,6 +113,18 @@ const Routes = () => (
         <RoutesStack.Screen
             name='GerarAvaliacao'
             component={ GerarAvaliacao }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}            
+        />
+
+        
+        <RoutesStack.Screen
+            name='Manual'
+            component={ Manual }
             options={{
                 transitionSpec: {
                   open: config,

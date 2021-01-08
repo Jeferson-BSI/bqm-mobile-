@@ -70,6 +70,7 @@ const Styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f8f8f8',
         fontSize: 14,
+        //alignItems: 'center'
     },
 
     main: {

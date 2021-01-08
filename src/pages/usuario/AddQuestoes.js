@@ -4,8 +4,9 @@ import { View,
     TouchableOpacity, 
     ScrollView, 
     StyleSheet, 
-    TextInput} 
-    from 'react-native';
+    TextInput,
+    AsyncStorage
+} from 'react-native';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import SelectedEtapa from '../../components/SelectedEtapa';
@@ -14,11 +15,11 @@ import SelectUnidade from '../../components/SelectUnidade';
 import SelectConhecimento from '../../components/SelectConhecimento';
 import SelectNivel from '../../components/SelectNivel';
 import FormRow from '../../components/FormRow';
+import axios from 'axios';
+
+const AddQuestoes = () => {
 
 
-const AddQuestoes = ({ route }) => {
-    const { params } = route
-    //alert(JSON.stringify(route.params))
     const [ selectedEtapa, setSelectedEtapa ] = useState('')
     const [ selectedAno, setSelectedAno ] = useState('')
     const [ selectedUnidade, setSelectedUnidade ] = useState('')
@@ -27,16 +28,52 @@ const AddQuestoes = ({ route }) => {
     const [ urlImag, setUrlImage ] = useState(null)
     const [ pergunta, setPerguta ] = useState('')
     const [ resposta, setResposta ] = useState('')
+    const [ idUser, setIdUser ] = useState(null)
+    const status = 3
 
-    const Questao = {
-        etapa: selectedEtapa,
-        ano: selectedAno,
-        unidade: selectedUnidade,
-        conhecimento: selectedConhecimento,
-        nivel: selectedNivel,
-        imag: urlImag,
-        pergunta: pergunta,
-        resposta: resposta
+    const questao = {
+        "status": "3",
+        "etapa": selectedEtapa,
+        "ano": selectedAno,
+        "unidade_tematica": selectedUnidade,
+        "objeto_de_conhecimento": selectedConhecimento,
+        "nivel_de_dificuldade": selectedNivel,
+        "imagem": urlImag,
+        "pergunta": pergunta,
+        "resposta": resposta,
+        "cadastro_pelo_usuario": idUser
+    }
+
+
+    async function cadastarQuestao() {
+        let token = null
+        let id = null
+        try{
+            token = await AsyncStorage.getItem('user_token')
+            id = await AsyncStorage.getItem('user_id');
+            setIdUser(parseInt(id))
+        }
+        catch(erro){
+            alert(erro+"ao recupera do storage")
+        }
+        //alert(token)
+
+        try{
+            const ApiGet = axios.create({
+                baseURL: 'https://bq.mat.br/api/v1',
+                timeout: 300,
+                //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
+                headers: {'Authorization': 'Token ' + token}
+            });
+            //alert(JSON.stringify(questao))
+            const response = await ApiGet.post('/questao/',questao);
+            (response !== null)
+            ?alert('Questão cadastrada com Sucesso!')
+            :null
+        }
+        catch(erro){
+            alert('O correu um erro ao cadastra a questão!')
+        }
     }
 
     return(
@@ -48,43 +85,40 @@ const AddQuestoes = ({ route }) => {
             <ScrollView 
             style={Styles.main}
             contentContainerStyle={Styles.ScrollStyle}>
+                <View style={ Styles.contenerSelects }>
 
-                <Text style={Styles.text} >Etapa</Text>
-                <SelectedEtapa
-                selectedValue={selectedEtapa}
-                data={params[0][1]}
-                onValueChange={setSelectedEtapa}/>
+                    <Text style={Styles.text} >Etapa</Text>
+                    <SelectedEtapa
+                    selectedValue={selectedEtapa}
+                    onValueChange={setSelectedEtapa}/>
 
-                <Text style={Styles.text} >Ano</Text>
-                <SelectedAno 
-                selectedValue={selectedAno}
-                op={selectedEtapa}
-                onValueChange={setSelectedAno}/>
+                    <Text style={Styles.text} >Ano</Text>
+                    <SelectedAno 
+                    selectedValue={selectedAno}
+                    op={selectedEtapa}
+                    onValueChange={setSelectedAno}/>
+    
+                    <Text style={Styles.text} >Unidade temática</Text>
+                    <SelectUnidade
+                    selectedValue={selectedUnidade}
+                    op={{etapa: selectedEtapa, ano: selectedAno}}
+                    onValueChange={setSelectedUnidade}                
+                    />
 
-                <Text style={Styles.text} >Unidade temática</Text>
-                <SelectUnidade
-                selectedValue={selectedUnidade}
-                op={{etapa: selectedEtapa, ano: selectedAno}}
-                data={params[1][1]}
-                fun={setSelectedUnidade}
-                onValueChange={setSelectedUnidade}                
-                />
-
-                <Text style={Styles.text} >Objeto de conhecimento</Text>
-                <SelectConhecimento
-                selectedValue={selectedConhecimento}
-                op={{etapa: selectedEtapa, ano: selectedAno, unidade: selectedUnidade}}
-                data={params[2][1]}
-                onValueChange={setSelectedConhecimento}                
-                />
-
-                <Text style={Styles.text} >Nível de dificuldade</Text>
-                <SelectNivel
-                op={selectedConhecimento}
-                data={params[3][1]}
-                selectedValue={selectedNivel}
-                onValueChange={setSelectednivel}
-                />
+                    <Text style={Styles.text} >Objeto de conhecimento</Text>
+                    <SelectConhecimento
+                    selectedValue={selectedConhecimento}
+                    op={{etapa: selectedEtapa, ano: selectedAno, unidade: selectedUnidade}}
+                    onValueChange={setSelectedConhecimento}                
+                    />
+    
+                    <Text style={Styles.text} >Nível de dificuldade</Text>
+                    <SelectNivel
+                    op={selectedConhecimento}
+                    selectedValue={selectedNivel}
+                    onValueChange={setSelectednivel}
+                    />
+                </View>
 
                 <Text style={Styles.text}>URL da imagem, caso haja.</Text>
                 <FormRow>
@@ -122,8 +156,9 @@ const AddQuestoes = ({ route }) => {
                 <TouchableOpacity 
                 style={Styles.bnt}
                 onPress={() => (
+                    cadastarQuestao()
                     //alert( `${Questao.etapa} ${Questao.ano} ${Questao.unidade} ${Questao.conhecimento} ${Questao.nivel} ${Questao.imag} ${Questao.pergunta} ${Questao.resposta}`)
-                    alert('')
+                   // alert('')
                 )}
                 >
                     <Text style={{color: 'white', fontSize: 18,}}> Cadastrar questão </Text> 
@@ -147,7 +182,6 @@ const Styles = StyleSheet.create({
 
     main: {
         flex: 1,
-        marginTop: 0,
         backgroundColor: '#f8f8f8',
         width: '100%'
     },
@@ -157,25 +191,18 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    select: {
-        flex: 1,
-        alignItems: "flex-end",
-        justifyContent: 'center',
-        width: '90%',
-        maxHeight: 40,
-        color: 'red',
-        borderRadius: 5,
-        borderWidth: 2,
-        borderColor: '#0b2639',
-        elevation: 3,
-
-        //backgroundColor: 'red'
+    contenerSelects: {
+        width: '100%', 
+        alignItems: 'center',
+        paddingVertical: '2%'
     },
 
     text: {
         alignSelf: 'flex-start',
         color:'#0b2639',
         fontSize: 17,
+        fontWeight: 'bold',
+
 
         paddingLeft: '5%',
         marginBottom: 5

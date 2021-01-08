@@ -1,13 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableOpacity,
+    AsyncStorage
+} from 'react-native';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import { SvgXml } from 'react-native-svg';
-import QuestionStorage from '../../funções/QuestionStorage';
-
+import QuestionStorage from '../../funções/QuestionStorage'
 
 function Bdquestoes({ navigation}) {
 
+    //QuestionStorage('niveldedificuldade')
 
     const IconAdd = `      
         <svg width="100%" height="60%" viewBox="0 0 576 512">
@@ -53,46 +59,29 @@ function Bdquestoes({ navigation}) {
         </defs>
         </svg> `;
 
+    // const navAddQuestoes = async() =>{
+    //     try {
+    //         const value = await AsyncStorage.multiGet(['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']);
+    //         if (value !== null) {
+    //             navigation.navigate('AddQuestoes', value)
 
-    const checkData = async() =>{
-        const list = ['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']
-        try {
-            const value = await AsyncStorage.getItem('objetodeconhecimento');
-            if (value == null) {
-                for(let op in list){
-                    QuestionStorage(list[op])}
-            }
-        } catch (error) {
-            alert(error+' => CheckData')
-        }
-    }
-
-    checkData()
-
-    const navAddQuestoes = async() =>{
-        try {
-            const value = await AsyncStorage.multiGet(['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']);
-            if (value !== null) {
-                navigation.navigate('AddQuestoes', value)
-
-            }
-        } 
-        catch (error) {
-            alert(error+' => aqui')
-        }
+    //         }
+    //     } 
+    //     catch (error) {
+    //         alert(error+' => aqui')
+    //     }
         
-    };
+    // };
 
     return (
         <View style={Styles.body}>
             <Nav>EPSILON</Nav>
-
             <Info>BANCO DE QUESTÕES PRIVADO (BQP)</Info>
 
             <View style={Styles.main}>
                 <TouchableOpacity 
                     style={Styles.touchable}
-                    onPress={navAddQuestoes}
+                    onPress={() => navigation.navigate('AddQuestoes')}
                 >
                     <SvgXml style={Styles.iconStyle} xml={ IconAdd } />
                     <Text style={Styles.iconText}> Adicionar questões </Text> 
@@ -101,15 +90,14 @@ function Bdquestoes({ navigation}) {
                 <TouchableOpacity 
                     style={Styles.touchable}
                     onPress={() => navigation.navigate('ListarQuestoes')}
-                    >
+                >
                     <SvgXml style={Styles.iconStyle} xml={ IconList } />
-                    <Text style={Styles.iconText}> Listar questões </Text>
+                    <Text style={[Styles.iconText, {paddingRight: 30}]}> Listar questões </Text>
                 </TouchableOpacity>
 
             </View>
         </View>
-    )
-}
+)}
 
 
 
@@ -125,9 +113,10 @@ const Styles = StyleSheet.create({
     
     main: {
         flex: 1,
-        marginTop: 0,
+        //marginTop: 0,
         backgroundColor: '#f8f8f8',
         alignItems: 'center',
+
     },
     
     touchable: {
@@ -141,12 +130,13 @@ const Styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#0b2639',
-        elevation: 3,
+        elevation: 5,
     },
     
     iconStyle: {
         //backgroundColor: 'red',
-        paddingLeft: 300,
+        //paddingLeft: '90%',//300,
+        paddingHorizontal: '45%'
         
     },
     

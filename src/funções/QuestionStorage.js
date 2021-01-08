@@ -1,67 +1,49 @@
-import React, { useState } from 'react';
 import { 
     AsyncStorage
 } from 'react-native';
-
 import axios from 'axios';
 
 
-const storeData = async (key, data) => {
-    try {
-      await AsyncStorage.setItem(
-        key,
-        data
-      );
-    } catch (error) {
-      alert(error)
-    }
-};
-
-
-
 async function QuestionStorage(op){
-    UserToken = await AsyncStorage.getItem('user_token')
+    const token = await AsyncStorage.getItem('user_token')
 
     const ApiGet = axios.create({
         baseURL: 'https://bq.mat.br/api/v1',
-        timeout: 200,
-        headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
-        // headers: {'Authorization': 'Token ' + UserToken}
+        timeout: 50,
+        //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
+        headers: {'Authorization': 'Token ' + token}
     });
 
-    let page = ''
-    let dados = []
-    let i = 2
     
-    try {
+    try{
+        let page = 1
+        let dados = []
+        while (true) {
+            const response = await ApiGet.get(`/${op}/?page=${page}`)
+            const { results, next } = response.data
+            dados = dados.concat(results)
 
-        while(1){
-            const response = await ApiGet.get(`/${op}/${page}`)
-            var {data} = response
-            const { results, next } = data
-            if (next !== null){
-                alert(results)
-                dados = dados.concat(results)
-                page = `?page=${i}`;
-                i++;
-            }
+            if(next !== null){
+                page++}
             else{
-               dados = dados.concat(results)
-                break
+                break}
+        }
+        //lert(JSON.stringify(dados[0]))
+        
+        if(dados !== null){
+            try{
+                await AsyncStorage.setItem(op, JSON.stringify(dados))
+            }
+            catch(erro){
+                alert(erro)
             }
         }
-
-       
-        (i==2)
-            ?storeData(op, JSON.stringify(data))
-            :storeData(op, JSON.stringify({'count': i-1, 'pages': dados}))
-  
     }
     catch(erro) {
-        alert(erro+op)
+        alert(erro)
     }
-}
 
+};
 
 
 export default QuestionStorage;

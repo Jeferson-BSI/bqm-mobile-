@@ -3,3 +3,4 @@
 =======
 [1031/200603.710:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 >>>>>>> 836cf230b528a5c7e7fe19f606af7d7b2def2aea
+[0107/172143.032:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
