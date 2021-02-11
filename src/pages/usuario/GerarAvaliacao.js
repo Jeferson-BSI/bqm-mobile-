@@ -14,23 +14,55 @@ import SelectedAno from '../../components/SelectedAno';
 import SelectUnidade from '../../components/SelectUnidade';
 import SelectConhecimento from '../../components/SelectConhecimento';
 import SelectNivel from '../../components/SelectNivel';
+import { Formik } from 'formik';
+import * as yup from "yup";
+
+
+const validationSchema = yup.object().shape({
+    nivel: yup
+        .string()
+        .label('Nível!'),
+        //.required(),
+
+    etapa: yup
+        .string()
+        .label('Etapa!'),
+        //.required(),
+    
+    ano: yup
+        .string()
+        .label('Ano!'),
+        //.required(),
+
+    unidade: yup
+        .string()
+        .label('Unidade temática!'),
+        //.required(),
+
+    conhecimento: yup
+        .string()
+        .label('Objet de Conhecimento!')
+        // .required(),
+})
 
 
 
-const GerarAvaliacao = () => {
-   
-    const [ selectedEtapa, setSelectedEtapa ] = useState('')
-    const [ selectedAno, setSelectedAno ] = useState('')
-    const [ selectedUnidade, setSelectedUnidade ] = useState('')
-    const [ selectedConhecimento, setSelectedConhecimento ] = useState('')
-    const [ selectedNivel, setSelectednivel ] = useState('')
+const GerarAvaliacao = ({navigation}) => {
 
-    let Questao = {
-        etapa: selectedEtapa,
-        ano: selectedAno,
-        unidade: selectedUnidade,
-        conhecimento: selectedConhecimento,
-        nivel: selectedNivel,
+    // let Questao = {
+    //     etapa: selectedEtapa,
+    //     ano: selectedAno,
+    //     unidade: selectedUnidade,
+    //     conhecimento: selectedConhecimento,
+    //     nivel: selectedNivel,
+    // }
+
+    const valoresIniciais = {
+        nivel: '',
+        etapa: '',
+        ano: '',
+        unidade: '',
+        conhecimento: '',
     }
 
 
@@ -44,62 +76,84 @@ const GerarAvaliacao = () => {
              style={Styles.main}
              contentContainerStyle={Styles.ScrollStyle}
              >
-                <View style={ Styles.contenerSelects }>
+                <Formik
+                initialValues={valoresIniciais}
+                onSubmit={values => {
+                    //alert(JSON.stringify(values))
+                    navigation.navigate('Avaliacao',{ values: values})
+                }}
+                validationSchema={validationSchema}
+                >
+                {formikProps => (
+                    <>
+                        <View style={ Styles.contenerSelects }>
 
+                        <Text style={Styles.text} >Etapa</Text>
+                        <SelectedEtapa
+                        formikKey={'etapa'}
+                        formikProps={formikProps}
+                        styleErro={Styles.styleErro}
+                        />
 
-                <Text style={Styles.text} >Etapa</Text>
-                <SelectedEtapa
-                selectedValue={selectedEtapa}
-                onValueChange={setSelectedEtapa}/>
+                        <Text style={Styles.text} >Ano</Text>
+                        <SelectedAno 
 
-                <Text style={Styles.text} >Ano</Text>
-                <SelectedAno 
-                selectedValue={selectedAno}
-                op={selectedEtapa}
-                onValueChange={setSelectedAno}/>
- 
-                <Text style={Styles.text} >Unidade temática</Text>
-                <SelectUnidade
-                selectedValue={selectedUnidade}
-                op={{etapa: selectedEtapa, ano: selectedAno}}
-                onValueChange={setSelectedUnidade}                
-                />
+                        op={formikProps.values.etapa}
+                        formikKey={'ano'}
+                        formikProps={formikProps}
+                        styleErro={Styles.styleErro}
+                        />
+        
+                        <Text style={Styles.text} >Unidade temática</Text>
+                        <SelectUnidade
+                        op={{etapa: formikProps.values.etapa, ano: formikProps.values.ano}}
+                        formikKey={'unidade'}
+                        formikProps={formikProps}
+                        styleErro={Styles.styleErro}               
+                        />
 
-                <Text style={Styles.text} >Objeto de conhecimento</Text>
-                <SelectConhecimento
-                selectedValue={selectedConhecimento}
-                op={{etapa: selectedEtapa, ano: selectedAno, unidade: selectedUnidade}}
-                onValueChange={setSelectedConhecimento}                
-                />
+                        <Text style={Styles.text} >Objeto de conhecimento</Text>
+                        <SelectConhecimento
+                        op={{etapa: formikProps.values.etapa, ano: formikProps.values.ano, unidade: formikProps.values.unidade}}
+                        formikKey={'conhecimento'}
+                        formikProps={formikProps}
+                        styleErro={Styles.styleErro}              
+                        />
 
-                    {/* <Text style={Styles.text} >Nível de dificuldade</Text>
-                    <SelectNivel
-                    op={selectedConhecimento}
-                    selectedValue={selectedNivel}
-                    onValueChange={setSelectednivel}
-                    /> */}
+                        <Text style={Styles.text} >Nível de dificuldade</Text>
+                        <SelectNivel
+                        op={formikProps.values.conhecimento}
+                        formikKey={'nivel'}
+                        formikProps={formikProps}
+                        styleErro={Styles.styleErro}
+                        />
 
-                </View>
+                        </View>
 
-                <View style={ Styles.touchable }>
-                    <TouchableOpacity 
-                        style={Styles.bnt}
-                        onPress={() =>(
-                         alert("Buscar no BQP")
-                        )}>
-
-                        <Text style={Styles.bntText}> Buscar no BQP </Text> 
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity 
-                        style={Styles.bnt}
-                        onPress={() =>(
-                         alert("Buscar no BQM")
-                        )}>
-
-                        <Text style={Styles.bntText}> Buscar no BQM </Text> 
-                    </TouchableOpacity>
-                </View>
+                        <View style={ Styles.touchable }>
+                            <TouchableOpacity 
+                                style={Styles.bnt}
+                                // onPress={() =>(
+                                // alert("Buscar no BQP")
+                                // )}
+                                onPress={formikProps.handleSubmit}
+                                >
+                                <Text style={Styles.bntText}> Buscar no BQP </Text> 
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                style={Styles.bnt}
+                                // onPress={() =>(
+                                // alert("Buscar no BQM")
+                                // )}
+                                onPress={formikProps.handleSubmit}
+                                >
+                                <Text style={Styles.bntText}> Buscar no BQM </Text> 
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                    )}
+                </Formik>
 
             </ScrollView>
         </View>
@@ -170,6 +224,10 @@ const Styles = StyleSheet.create({
         color:'#0b2639',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    
+    styleErro: {
+        borderColor:'red'
     }
 
 });

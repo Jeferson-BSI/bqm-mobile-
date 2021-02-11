@@ -9,7 +9,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { object } from 'yup';
+
 
 const filterText = (text) =>{
     if(text.lehgth < 130){
@@ -18,7 +18,7 @@ const filterText = (text) =>{
     return `${text.substring(0, 130)}...?`;
 };
 
-export default function Questao(props) {
+export default function QuestaoAvaliacao(props) {
     const { data, list, setList } = props;
     let listId = [...list]
     const [ visible, setVisible] = useState(false);
@@ -79,11 +79,11 @@ export default function Questao(props) {
                         onValueChange={()=>{
                             setSelection(!isSelected)
                             if(!isSelected){
-                                listId.push(data.id)
+                                listId.push(data)
                                 setList(listId)
                             }
                             else{
-                                listId.splice(listId.indexOf(data.id), 1);
+                                listId.splice(listId.indexOf(data), 1);
                                 setList(listId)
                             }
                         }}

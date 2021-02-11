@@ -9,6 +9,7 @@ import QuestionStorage from '../funções/QuestionStorage';
 
 
 const selectedEtapa = (props) => {
+    const {formikProps, formikKey, styleErro } = props
     const [ data, setData] = useState(null);
     
     async function getData(){
@@ -23,19 +24,23 @@ const selectedEtapa = (props) => {
         }
         catch (erro){
             alert(erro)
-        }
+        }  
     };
 
     useEffect(() =>{getData()}, [])
 
     return(
 
-        <View style={Styles.select}>
+        <View style={[Styles.select, (formikProps.touched[formikKey] && formikProps.errors[formikKey])?styleErro: null]}>
             <Picker 
             style={{width: '100%', height: '100%'}}
-            selectedValue={props.selectedValue}
-            onValueChange={(itemValue) => {
-            props.onValueChange(itemValue)}}
+            // selectedValue={props.selectedValue}
+            // onValueChange={(itemValue) => {
+            // props.onValueChange(itemValue)}}
+            selectedValue={formikProps.values[formikKey]}
+            onValueChange={value => {
+                formikProps.setFieldValue(formikKey, value)
+            }}
             >
             <Picker.Item label='Selecione a Etapa de Educação' value='' />
             {(data !== null)

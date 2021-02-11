@@ -5,7 +5,7 @@ import QuestionStorage from '../funções/QuestionStorage';
 
 
 const selectedUnidade = (props) => {
-    const { op } = props
+    const {op, formikProps, formikKey, styleErro } = props
     const [ data, setData] = useState(null);
 
     async function getData(){
@@ -41,12 +41,16 @@ const selectedUnidade = (props) => {
     }
 
     return(
-        <View style={Styles.select}>
+        <View style={[Styles.select, (formikProps.touched[formikKey] && formikProps.errors[formikKey])?styleErro: null]}>
             <Picker 
             style={{width: '100%', height: '100%'}}
-            selectedValue={props.selectedValue}
-            onValueChange={(itemValue) => { 
-                props.onValueChange(itemValue)}}
+            // selectedValue={props.selectedValue}
+            // onValueChange={(itemValue) => { 
+            //     props.onValueChange(itemValue)}}
+            selectedValue={formikProps.values[formikKey]}
+            onValueChange={value => {
+                formikProps.setFieldValue(formikKey, value)
+            }}
             >
             <Picker.Item key={0} label='Selecione a Unidade temática' value='' />
             {/* {

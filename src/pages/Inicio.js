@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 
 import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
+import { Video } from 'expo-av';
+//import  Video  from 'react-native-video';
 
+import VideoPlayer from 'expo-video-player'
 
 import Api from '../components/Api';
 
@@ -67,16 +70,39 @@ function Inicio() {
             <Info>PÁGINA INICIAL</Info>
 
             <Main>
-
                 <View style={styles.styleView }>
                     <Text style={styles.styleText}>Olá, bem vindo!</Text>
                     <Text style={styles.styleText}>
                         BQM é uma plataforma gratuita que tem o objetivo de facilitar a elaboração de atividades avaliativas de matemática. É um banco com mais de XXX questões organizadas conforme eixo temático, objeto de conhecimento, ciclo de ensino e nível de dificuldade. Aproveite!
                     </Text>
-
-                <View style={{width:500, height:200, backgroundColor: '#0b2639', alignItems: 'center', justifyContent: 'center', marginTop:10}}>
+                <View>
                     <Text style={{color: 'white'}}>Video</Text>
                 </View>
+
+                {/* <Video
+                    source={{ uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="cover"
+                    shouldPlay={false}
+                    isLooping
+                    style={{ width: 300, height: 300 }}
+                    /> */}
+{/* 
+               < VideoPlayer
+                    videoProps={{
+                        shouldPlay: false,
+                        resizeMode: Video.RESIZE_MODE_CONTAIN,
+                        isLooping: true,
+                        source: {
+                        uri:  'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                        },
+                    }}
+                    width={300}
+                    height={300}
+                    inFullscreen={true}
+                /> */}
                 </View>
 
             </Main>
@@ -96,12 +122,30 @@ const styles = StyleSheet.create({
     },
 
     styleText: {
-        fontSize: 17,
+        fontSize: 18,
+        fontWeight: '700',
         color:'#0b2639',
-        padding: 20,
-        marginTop: 10,
+        paddingHorizontal: '2%',
+        color: '#286090',
+       marginTop: 10,
         textAlign : 'justify',
-    }
+    },
+
+    conteiner: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'rgba(152, 148, 148, 0.1)',
+
+        width: '95%',
+        paddingVertical: 15,
+        paddingHorizontal: '3%',
+        marginVertical: '4%',
+
+        borderRadius: 5,
+        borderColor: '#e1e1e8',
+
+        
+    },
     
 });
 

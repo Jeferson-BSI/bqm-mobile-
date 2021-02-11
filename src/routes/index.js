@@ -5,6 +5,7 @@ import Inicio from '../pages/Inicio';
 import Entrar from '../pages/Entrar';
 import Sobre from '../pages/Sobre';
 import GerarAvaliacao from '../pages/usuario/GerarAvaliacao';
+import Avaliacao from '../pages/usuario/Avaliacao';
 import Configuracao from '../pages/usuario/Configuracao';
 import Bdquestoes from '../pages/usuario/Bdquestoes';
 import AddQuestoes from '../pages/usuario/AddQuestoes';
@@ -38,7 +39,7 @@ const RoutesStack = createStackNavigator();
  
 const Routes = () => (
     <RoutesStack.Navigator
-        initialRouteName= "Inicio"
+        initialRouteName= 'Inicio'
         screenOptions={{ header: () => <Header /> }}>
 
         <RoutesStack.Screen
@@ -119,6 +120,18 @@ const Routes = () => (
                   close: config,
                 },
             }}            
+
+        />
+
+        <RoutesStack.Screen
+            name='Avaliacao'
+            component={ Avaliacao }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}
         />
 
         

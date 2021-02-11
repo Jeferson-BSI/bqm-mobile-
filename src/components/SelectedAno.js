@@ -4,6 +4,8 @@ import { View, Picker, StyleSheet} from 'react-native';
 
 const selectedAno = (props) => {
     //alert(props.selectedValue)
+    const {op, formikProps, formikKey, styleErro } = props
+
 
 
     const PickerItem = (i,f) => {
@@ -16,12 +18,16 @@ const selectedAno = (props) => {
      
 
     return(
-        <View style={Styles.select}>
+        <View style={[Styles.select, (formikProps.touched[formikKey] && formikProps.errors[formikKey])?styleErro: null]}>
             <Picker 
             style={{width: '100%', height: '100%'}}
-            selectedValue={props.selectedValue}
-            onValueChange={(itemValue) => { 
-            props.onValueChange(itemValue)}}
+            // selectedValue={props.selectedValue}
+            // onValueChange={(itemValue) => { 
+            // props.onValueChange(itemValue)}}
+            selectedValue={formikProps.values[formikKey]}
+            onValueChange={value => {
+                formikProps.setFieldValue(formikKey, value)
+            }}
             >
 
             {(props.op=='4')

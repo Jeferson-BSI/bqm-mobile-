@@ -5,7 +5,7 @@ import axios from 'axios';
 import QuestionStorage from '../funções/QuestionStorage';
 
 const selectNivel = (props) => {
-    const {op } = props
+    const {op, formikProps, formikKey, styleErro } = props
 
     const [ dataNivel, setData] = useState(null);
     
@@ -24,16 +24,22 @@ const selectNivel = (props) => {
         }
     };
 
-    useEffect(() =>{getData()}, [])
-    
-     
+    //useEffect(() =>{getData()}, [])
+    const list  = [{nivel_de_dificuldade: 1, nivel_de_dificuldade_nome: 'facil'}, {nivel_de_dificuldade: 2, nivel_de_dificuldade_nome: 'médio'}, {nivel_de_dificuldade: 3, nivel_de_dificuldade_nome: 'dificil'}]
+    useEffect(() =>{setData(list)}, [])
+
+    //alert(list)
     return(
-        <View style={Styles.select}>
+        <View style={[Styles.select, (formikProps.touched[formikKey] && formikProps.errors[formikKey])?styleErro: null]}>
             <Picker 
             style={{width: '100%', height: '100%'}}
-            selectedValue={props.selectedValue}
-            onValueChange={(itemValue) => { 
-            props.onValueChange(itemValue)}}
+            //selectedValue={props.selectedValue}
+            //onValueChange={(itemValue) => { 
+                //props.onValueChange(itemValue)}}
+            selectedValue={formikProps.values[formikKey]}
+            onValueChange={value => {
+                formikProps.setFieldValue(formikKey, value)
+            }}
             >
 
             <Picker.Item key={0} label='Nível de dificuldade' value='' />

@@ -4,7 +4,7 @@ import QuestionStorage from '../funções/QuestionStorage';
 
 
 const selectConhecimento = (props) => {
-    const { op } = props
+    const {op, formikProps, formikKey, styleErro } = props
     const [ data, setData] = useState(null);
 
     async function getData(){
@@ -14,9 +14,10 @@ const selectConhecimento = (props) => {
             if(dados === null){
                 QuestionStorage('objetodeconhecimento');
             }
-    
+            
             dados = await AsyncStorage.getItem('objetodeconhecimento');
             setData(JSON.parse(dados))
+            //alert(JSON.stringify(data)+'te')
         }
         catch (erro){
             alert(erro)
@@ -28,25 +29,36 @@ const selectConhecimento = (props) => {
 
     function PickerItems(){
         let dados = []
+
         for(let objeto of data){
-            if(op.etapa == objeto.etapa && op.ano == objeto.ano && op.unidade == objeto.unidade_tematica){
-                dados = dados.concat( 
-                    <Picker.Item 
-                    key={objeto.objeto_de_conhecimento} 
-                    label={objeto.objeto_de_conhecimento_nome} 
-                    value={objeto.objeto_de_conhecimento} />)
-        }}
+            try{
+                if(op.etapa == objeto.etapa && op.ano == objeto.ano && op.unidade == objeto.unidade_tematica){
+                    dados = dados.concat( 
+                        <Picker.Item 
+                        key={objeto.objeto_de_conhecimento} 
+                        label={objeto.objeto_de_conhecimento_nome} 
+                        value={objeto.objeto_de_conhecimento} />)
+            }
+        }
+        catch(err){
+            //alert(err)
+        }
+    }
 
         return dados
     }
 
     return(
-        <View style={Styles.select}>
+        <View style={[Styles.select, (formikProps.touched[formikKey] && formikProps.errors[formikKey])?styleErro: null]}>
             <Picker 
             style={{width: '100%', height: '100%'}}
-            selectedValue={props.selectedValue}
-            onValueChange={(itemValue) => { 
-            props.onValueChange(itemValue)}}
+            // selectedValue={props.selectedValue}
+            // onValueChange={(itemValue) => { 
+            // props.onValueChange(itemValue)}}
+            selectedValue={formikProps.values[formikKey]}
+            onValueChange={value => {
+                formikProps.setFieldValue(formikKey, value)
+            }}
             >
                 <Picker.Item label='Selecione Objeto de Conhecimento' value='' />
                 {/* {
