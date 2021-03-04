@@ -37,9 +37,9 @@ function Epsilon({ route }) {
             let page = 1
             let dados = []
             while (true) {
-        const response = await ApiGet.get(`/imprimir/?page=${page}`,{"cadastro_pelo_usuario": id})
+                const response = await ApiGet.get(`/imprimir/?page=${page}`, {"cadastro_pelo_usuario": id})
                 const { results, next } = response.data
-                alert(JSON.stringify(response.results))
+                //alert(JSON.stringify(response.results))
                 dados = dados.concat(results)
 
                 if(next !== null){

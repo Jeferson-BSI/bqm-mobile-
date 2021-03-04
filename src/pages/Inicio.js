@@ -80,7 +80,7 @@ function Inicio() {
                 </View>
 
                 {/* <Video
-                    source={{ uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' }}
+                    source={{ uri: 'https://bq.mat.br/media/video.webm' }}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}

@@ -195,7 +195,7 @@ function Entrar() {
         <SvgXml style= {styles.bqmIcon} xml={bqmIcon} />
 
         <Formik
-        initialValues={{email: 'test@gmail.com', senha: '12345678'}}
+        initialValues={{email: 'epsilon@bq.mat.br', senha: '23571113'}}
         onSubmit={values => {
           //alert(JSON.stringify(values))
           handlesLogin(values)

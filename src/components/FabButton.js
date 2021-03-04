@@ -32,7 +32,7 @@ export default function FabButton(props){
         });
     
         try{
-            const response = await ApiDelete.delete(`/questao/${4}`)
+            const response = await ApiDelete.delete(`/questao/${2}/`)
             alert(JSON.stringify(response))
         }
         catch(err){

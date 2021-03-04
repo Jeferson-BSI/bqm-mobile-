@@ -27,13 +27,12 @@ function ListarQuestoes() {
             timeout: 100,
             //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
             headers: {'Authorization': 'Token ' + token},
+            data
         });
         
         try{
-            const response = await ApiGet.get(`/questao/`,{
-                'status': 3,
-                'cadastro_pelo_usuario': id
-            })
+            const response = await ApiGet.get(`/questao/?status=3`)
+
             const { results } = response.data
             setData(results);
         }

@@ -14,7 +14,7 @@ async function DeleteQuestoes(id){
     });
 
     try{
-        const response = await ApiDelete.delete(`questao/${1}`)
+        const response = await ApiDelete.delete(`questao/${1}/`)
         alert(JSON.stringify(response))
     }
     catch(err){

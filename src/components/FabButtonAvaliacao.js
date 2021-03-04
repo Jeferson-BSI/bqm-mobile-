@@ -11,6 +11,7 @@ import axios from 'axios'
 
 export default function FabButtonAvaliacao(props){
     const {list, isVisible, setVisible } = props
+    
     function Deletar(){
         if(list.length == 0){
             return}
@@ -32,7 +33,7 @@ export default function FabButtonAvaliacao(props){
         });
     
         try{
-            const response = await ApiDelete.delete(`/questao/${4}`)
+            const response = await ApiDelete.delete(`/questao/${1}/`)
             alert(JSON.stringify(response))
         }
         catch(err){
