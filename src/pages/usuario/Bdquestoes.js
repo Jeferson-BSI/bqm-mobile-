@@ -31,8 +31,8 @@ function Bdquestoes({ navigation}) {
             x2="0"
             y2="0"
             gradient-units="userSpaceOnUse">
-            <stop offset="0" stop-color="#0b2639" />
-            <stop offset="1" stop-color="#0b2639" />
+            <stop offset="0" stop-color="#286090" />
+            <stop offset="1" stop-color="#286090" />
             </linearGradient>
         </defs>
         </svg> `;
@@ -53,8 +53,8 @@ function Bdquestoes({ navigation}) {
             x2="0"
             y2="0"
             gradient-units="userSpaceOnUse">
-            <stop offset="0" stop-color="#0b2639" />
-            <stop offset="1" stop-color="#0b2639" />
+            <stop offset="0" stop-color="#286090" />
+            <stop offset="1" stop-color="#286090" />
             </linearGradient>
         </defs>
         </svg> `;
@@ -105,7 +105,9 @@ const Styles = StyleSheet.create({
     
     body: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        //backgroundColor: '#fff',
+        backgroundColor: '#e8f0ff',
+
         fontSize: 14,
         alignItems: 'center',
         justifyContent: 'center',
@@ -114,8 +116,11 @@ const Styles = StyleSheet.create({
     main: {
         flex: 1,
         //marginTop: 0,
-        backgroundColor: '#f8f8f8',
         alignItems: 'center',
+        width: '85%',
+        backgroundColor: '#f8f8f8',
+        borderRadius: 10,
+        marginBottom: 20
 
     },
     
@@ -124,13 +129,14 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        marginTop: 30,
-        width: '90%',
+        marginTop: 40,
+        width: '80%',
         maxHeight: '30%',
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#0b2639',
         elevation: 5,
+        marginBottom: 30
     },
     
     iconStyle: {

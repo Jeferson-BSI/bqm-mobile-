@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableOpacity, 
+    ScrollView, 
+    AsyncStorage 
+} from 'react-native';
 import Body from '../../components/Body';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
@@ -24,11 +31,19 @@ function Configuracao({ navigation }) {
         x2="0"
         y2="0"
         gradient-units="userSpaceOnUse">
-        <stop offset="0" stop-color="#0b2639" />
-        <stop offset="1" stop-color="#0b2639" />
+        <stop offset="0" stop-color="#286090" />
+        <stop offset="1" stop-color="#286090" />
         </linearGradient>
     </defs>
     </svg> `;
+    async function sair(){
+        //apaga o cache de login
+        await AsyncStorage.setItem('user_token', '')
+        await AsyncStorage.setItem('user_id', '')
+        await AsyncStorage.setItem('user_nivel_de_acesso', '')
+        //volta para tela inicial
+        navigation.navigate('Inicio')
+      }
 
 
     return (
@@ -44,7 +59,12 @@ function Configuracao({ navigation }) {
                     <Text style={Styles.userText}>epsilon@bq.mat.br</Text>
                 </View>
 
-                <View style={Styles.touchable}>
+                <ScrollView style={Styles.touchable} contentContainerStyle={ {
+                    justifyContent: 'flex-start',
+                    alignItems: "center",}}>
+            {/* <TouchableOpacity style={Styles.bnt}>
+                <Text style={Styles.bntText}> Manual </Text> 
+            </TouchableOpacity> */}
                     <TouchableOpacity 
                     style={Styles.bnt}
                     onPress={() => (
@@ -57,7 +77,15 @@ function Configuracao({ navigation }) {
                     <TouchableOpacity style={Styles.bnt}>
                         <Text style={Styles.bntText}> Excluir conta </Text> 
                     </TouchableOpacity>
-                </View>
+
+                    
+                    <TouchableOpacity 
+                    style={[Styles.bnt, {backgroundColor: '#c94f47'}]}
+                    onPress={sair}
+                    >
+                        <Text style={Styles.bntText}> Sair</Text> 
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         </View>
     )
@@ -74,14 +102,14 @@ const Styles = StyleSheet.create({
     },
 
     main: {
-        flex: 1,
+        //flex: 1,
         marginTop: 30,
         backgroundColor: '#f8f8f8',
         alignItems: 'center'
     },
 
     icon: {
-        flex:1,
+        //flex:1,
         marginTop: 5,
         backgroundColor: '#f8f8f8',
         alignItems: "center",
@@ -98,11 +126,9 @@ const Styles = StyleSheet.create({
         },
 
     touchable: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: "center",
+       
         width: '100%',
-        marginTop: 20,
+        //marginTop: 20,
     },
 
     bnt:{
@@ -113,7 +139,7 @@ const Styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         width: '90%',
-        height: '23%',
+        height: 50,//'23%',
         borderWidth: 2,
         borderColor: '#002907',
         backgroundColor: '#ebebeb',//'#e8e8e8'//'#F4F5F6',

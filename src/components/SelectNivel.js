@@ -71,7 +71,7 @@ const Styles = StyleSheet.create({
 
         width: '90%',
         maxHeight: 40,
-        marginBottom: 15,
+       // marginBottom: 0,
         marginLeft: '2%',
 
         borderRadius: 5,

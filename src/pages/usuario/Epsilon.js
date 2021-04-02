@@ -1,43 +1,89 @@
 import React, { useState, useEffect }from 'react';
-import { View, StyleSheet, ScrollView, Text, AsyncStorage } from 'react-native';
+import { 
+    View, 
+    StyleSheet, 
+    ScrollView, 
+    Text, 
+    AsyncStorage,
+    Button
+} from 'react-native';
+import axios from 'axios';
 
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import CardProva from '../../components/CardProva';
-import axios from 'axios';
-import { SvgXml } from 'react-native-svg';
-
-
+import InputModal from '../../components/InputModal';
+import OptionModal from '../../components/OptionModal';
+import deletarAvaliacao from '../../funções/deletarAvaliacao';
+import atualizarAvaliacao from '../../funções/atualizarAvaliacao';
+import { useNavigation } from '@react-navigation/native';
 
 function Epsilon({ route }) {
-    // const iconEdit = `
-    //     <svg width="100%" height="100%" viewBox="0 0 576 512">
-    //         <path
-    //         fill="#286090"
-    //         d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"
-    //     />
-    //     </svg> `;
-
-
+    const navigation = useNavigation();
     const { token } = route.params;
+    
     const [ provas, setProvas] = useState(null);
+    const [ isVisible, setVisible] = useState(false);
+    const [isVisibleTwo, setVisibleTwo ] = useState(false);
+    const [obj, setObj ] = useState(null);
+    const [nome, setNome ] = useState(null);
+
+
+    const deletar = () =>{
+            deletarAvaliacao(obj.id)
+            provas.splice(provas.indexOf(obj), 1)
+            setVisible(false)
+    }
+
+    const atualizar = () => {
+        provas.splice(provas.indexOf(obj), 1)
+        obj.nome = nome;
+        const  list  = [...provas, obj]
+        atualizarAvaliacao(obj.id, nome)
+        setProvas(list)
+        setVisibleTwo(false)
+        setNome('')
+     }
  
     const ApiGet = axios.create({
-        baseURL: 'https://bq.mat.br/api/v1',
+        //baseURL: 'https://bq.mat.br/api/v1',
+
+        baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
         timeout: 200,
         //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
         headers: {'Authorization': 'Token ' + token}
     });
 
-    //alert(token);
+
+    const setCards = () => {
+        if(provas !== null)
+        provas.sort((a, b) =>{
+            return (a.nome > b.nome) ? 1 : ((b.nome > a.nome) ? -1 : 0);
+        })
+        
+        return (provas !== null)
+        ?provas.map(value =>(
+           <CardProva 
+            key={value.id} 
+            value={value}
+            token={token}
+            //setId={setId}
+            setObj={setObj}
+            setVisible={setVisible}
+            setVisibleTwo={setVisibleTwo}
+           />
+        ))
+        :null
+    }
 
     async function getProva(){
         const id = await AsyncStorage.getItem('user_id')
+        console.log(token);
         try{
             let page = 1
             let dados = []
             while (true) {
-                const response = await ApiGet.get(`/imprimir/?page=${page}`, {"cadastro_pelo_usuario": id})
+                const response = await ApiGet.get(`/imprimir/?cadastro_pelo_usuario=${id}&page=${page}`)
                 const { results, next } = response.data
                 //alert(JSON.stringify(response.results))
                 dados = dados.concat(results)
@@ -47,7 +93,6 @@ function Epsilon({ route }) {
                 else{
                     break}
             }
-
             setProvas(dados)
         }
         catch(erro) {
@@ -74,14 +119,49 @@ function Epsilon({ route }) {
                  showsVerticalScrollIndicator={false}
                  contentContainerStyle={styles.conteiner}>
                     {
-                     (provas !== null)
-                     ?provas.map(name =>(
-                        <CardProva key={name.nome} name={name.nome}/>
-                     ))
-                     :null
+                        setCards()
+                    //  (provas !== null)
+                    //  ?provas.map(value =>(
+                    //     <CardProva 
+                    //      key={value.id} 
+                    //      value={value}
+                    //      //setId={setId}
+                    //      setObj={setObj}
+                    //      setVisible={setVisible}
+                    //      setVisibleTwo={setVisibleTwo}
+
+                    //     />
+                    //  ))
+                    //  :null
                     }
                 </ScrollView>
+
+                <OptionModal 
+                 texto={'Deseja excluir esta avaliação?'} 
+                 isVisible={isVisible}
+                 onPress={deletar}
+                 onPress2={()=>setVisible(!isVisible)}
+                />
+
+                <InputModal 
+                 texto={'Nome:'} 
+                 isVisible={isVisibleTwo}
+                 onChangeTex={setNome}
+                 value={nome}
+                 onPress={atualizar}
+                 onPress2={()=>setVisibleTwo(!isVisibleTwo)}
+                />
+                {/* <Button
+onPress={()=>{
+    alert(token)
+    console.log(token);
+    navigation.navigate('tests')}}
+  title="Learn More"
+  color="#841584"
+  accessibilityLabel="Learn more about this purple button"
+/> */}
             </View>
+
         </View>
 )};
 
@@ -89,7 +169,8 @@ function Epsilon({ route }) {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        // backgroundColor: '#fff',
+        backgroundColor: '#e8f0ff',
         fontSize: 14,
         alignItems: 'center',
         justifyContent: 'center',
@@ -98,37 +179,45 @@ const styles = StyleSheet.create({
 
     main: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: 'rgba(152, 148, 148, 0.19)',//'#f8f8f8',
         alignItems: 'center',
-        width: '100%',
-        justifyContent: 'center'
+        width: '95%',
+        justifyContent: 'center',
+        //minHeight: 500
+        borderRadius: 15,
+        marginBottom: 15
+
 
     },
 
     conteiner :{    
-        //paddingTop: 10,
+       // flex:1,
+        padding: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        width: '95%',
-        backgroundColor: 'rgba(152, 148, 148, 0.1)',//'#f7f7f9',
+        //width: '95%',
+        //backgroundColor: 'rgba(152, 148, 148, 0.1)',//'#f7f7f9',
         borderRadius: 5,
         borderColor: '#e1e1e8',
+        minHeight: 150,
+       // marginBottom: 10
+
     },
 
     title: {
-        backgroundColor: 'rgba(152, 148, 148, 0.1)',
-        
+        backgroundColor: '#f7f7f9',//'rgba(152, 148, 148, 0.1)',
         alignItems: 'center',
         justifyContent: 'center',
         
         width: '95%',
         paddingVertical: 10,
         marginTop: '3%',
+        marginBottom: 10,
 
         borderTopEndRadius: 5,
         borderTopStartRadius:5,
-        borderColor: '#e1e1e8',
+        borderColor: '#f7f7f9',
         borderBottomWidth: 1,
         borderBottomColor:'gray'
     },
@@ -136,7 +225,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#286090',
+        color:'#48484c',// '#286090',
     }
 });
 

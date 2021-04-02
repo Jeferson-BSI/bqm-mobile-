@@ -25,6 +25,7 @@ const selectedEtapa = (props) => {
         catch (erro){
             alert(erro)
         }  
+        //alert(data)
     };
 
     useEffect(() =>{getData()}, [])

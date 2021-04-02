@@ -13,13 +13,14 @@ const Info = (props) => {
 const styles = StyleSheet.create({
 
     info:{
-        //backgroundColor: '#f8f8f8',
-        backgroundColor: 'rgba(152, 148, 148, 0.1)',
+        backgroundColor: '#f8f8f8',
+        //backgroundColor: 'rgba(152, 148, 148, 0.1)',
         width: '95%',
         alignSelf: 'center',
 
         height: 40,
-        marginTop: 5,
+        marginTop: 10,
+        marginBottom: 10,
         padding: 5,
         alignItems: 'stretch',
         justifyContent: 'center',

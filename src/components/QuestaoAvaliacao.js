@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
     View, 
     Text, 
@@ -6,7 +6,6 @@ import {
     StyleSheet,
     Button,
     CheckBox,
-    AsyncStorage
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -15,57 +14,31 @@ const filterText = (text) =>{
     if(text.lehgth < 130){
         return text;
     }
-    return `${text.substring(0, 130)}...?`;
+    return `${text.substring(0, 130)}`;
 };
 
+
 export default function QuestaoAvaliacao(props) {
-    const { data, list, setList } = props;
-    let listId = [...list]
+    const { data, list, setList, id, setId, setVisibleQuestao, setDataQuestao} = props;
+    
+    let listId = [...list];
+    let qids = [...id];
+
     const [ visible, setVisible] = useState(false);
     const [ isSelected, setSelection ] = useState(false);
     
-    // const [ unidade, setUnidade ] = useState(null);
-    // var unidade_name
-    
-//     async function getData(){
-//         try {
-//             let dados = await AsyncStorage.getItem('unidadetematica');
-//             if(dados === null){
-//                 QuestionStorage('unidadetematica');
-//             }
-            
-//             dados = await AsyncStorage.getItem('unidadetematica');
-//             setUnidade(JSON.parse(dados))
-//         }
-//         catch (erro){
-//             alert(erro)
-//         }
-//         // for(let objeto of unidade){
-//         //     alert(objeto)
-//         //     if (objeto.unidade_tematica == data.unidade_tematica){
-//         //     alert(unidade[0].unidade_tematica_nome)
-//         //     unidade_name =  objeto.unidade_tematica_nome
-//         //     break
-//         // }
-//     // } 
-// };
-
-//     useEffect(() =>{getData()}, [])
-
     return (
         <View>
             <TouchableOpacity style={ styles.conteiner}
-            onPress={() => setVisible(true)}>
+            onPress={() => {
+                setDataQuestao(data)
+                setVisibleQuestao(true)
+                }}>
                 <View style={styles.questao}>
-{/* 
-                    <View style={ {flexDirection: 'row'}}>
-                        <Text  style={ styles.textAp }>Área: </Text>
-                        <Text style={ styles.title }>{ unidade_name } </Text>
-                    </View> */}
 
                     <View>
                         <Text style={ styles.textAp }>Pergunta:  </Text>
-                        <Text style={ styles.textPergunta } >{filterText(data.pergunta) } </Text>
+                        <Text style={ styles.textPergunta } >{filterText(data.pergunta) } ...? </Text>
                     </View>
                     
                     <View>
@@ -81,10 +54,16 @@ export default function QuestaoAvaliacao(props) {
                             if(!isSelected){
                                 listId.push(data)
                                 setList(listId)
+
+                                qids.push(data.id)
+                                setId(qids)
                             }
                             else{
                                 listId.splice(listId.indexOf(data), 1);
-                                setList(listId)
+                                setList(listId);
+
+                                qids.splice(qids.indexOf(data.id), 1);
+                                setId(qids);
                             }
                         }}
                         style={styles.checkBox}
@@ -95,7 +74,7 @@ export default function QuestaoAvaliacao(props) {
                 </View>
             </TouchableOpacity>
 
-            <Modal isVisible={ visible }>
+            {/* <Modal isVisible={ visible }>
                 <View style={ {backgroundColor: 'white', height: '50%', justifyContent: 'space-between'}}>
                     <View style={styles.questao}>
 
@@ -119,7 +98,7 @@ export default function QuestaoAvaliacao(props) {
                     </TouchableOpacity>
 
                 </View>
-            </Modal>
+            </Modal> */}
         </View>
     )
 }
@@ -137,9 +116,9 @@ const styles = StyleSheet.create({
     },
 
     questao: {
-        alignItems: 'center',
-        paddingHorizontal: '2%',
-        paddingVertical: '1%',
+        //alignItems: 'center',
+        paddingHorizontal: '3%',
+        paddingVertical: '2%',
     },
 
     title: {

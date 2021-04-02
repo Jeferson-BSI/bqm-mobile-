@@ -12,6 +12,8 @@ import AddQuestoes from '../pages/usuario/AddQuestoes';
 import ListarQuestoes from '../pages/usuario/ListarQuestoes';
 import ModficarSenha from '../pages/usuario/ModficarSenha';
 import Manual from '../pages/usuario/Manual';
+import tests from '../pages/usuario/tests';
+
 
 import Epsilon from '../pages/usuario/Epsilon';
 
@@ -190,7 +192,16 @@ const Routes = () => (
             }}            
         />
 
-
+        <RoutesStack.Screen
+            name='tests'
+            component={ tests }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}
+        />
 
     </RoutesStack.Navigator>
 );

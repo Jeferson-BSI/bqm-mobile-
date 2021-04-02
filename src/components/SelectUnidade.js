@@ -16,11 +16,15 @@ const selectedUnidade = (props) => {
             }
     
             dados = await AsyncStorage.getItem('unidadetematica');
+
+            //alert(dados)
             setData(JSON.parse(dados))
         }
         catch (erro){
             alert(erro)
         }
+
+        //alert(data)
     };
 
     useEffect(() =>{getData()}, [])
@@ -34,7 +38,6 @@ const selectedUnidade = (props) => {
                     label={tematica.unidade_tematica_nome} 
                     value={tematica.unidade_tematica} />)
             }
-
         }
 
         return dados

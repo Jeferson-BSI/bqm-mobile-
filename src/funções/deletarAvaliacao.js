@@ -2,7 +2,7 @@ import { AsyncStorage } from 'react-native';
 import axios from 'axios';
 
 
-async function DeleteQuestoes(id){
+async function deletarAvaliacao(id){
     const token = await AsyncStorage.getItem('user_token')
 
     const ApiDelete = axios.create({
@@ -13,14 +13,14 @@ async function DeleteQuestoes(id){
     });
 
     try{
-        const response = await ApiDelete.delete(`questao/${id}/`)
+        const response = await ApiDelete.delete(`imprimir/${id}/`)
         //alert(JSON.stringify(response))
     }
     catch(err){
-        //alert(err+ ' ao deletar')
+        alert(err+ ' ao deletar')
     }
 
 }
 
 
-export default DeleteQuestoes;
+export default deletarAvaliacao;

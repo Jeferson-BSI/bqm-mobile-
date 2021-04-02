@@ -49,20 +49,14 @@ const validationSchema = yup.object().shape({
 
 const GerarAvaliacao = ({navigation}) => {
 
-    // let Questao = {
-    //     etapa: selectedEtapa,
-    //     ano: selectedAno,
-    //     unidade: selectedUnidade,
-    //     conhecimento: selectedConhecimento,
-    //     nivel: selectedNivel,
-    // }
 
     const valoresIniciais = {
-        nivel: '',
+        status: '',
         etapa: '',
         ano: '',
         unidade: '',
         conhecimento: '',
+        nivel: '',
     }
 
 
@@ -78,9 +72,10 @@ const GerarAvaliacao = ({navigation}) => {
              >
                 <Formik
                 initialValues={valoresIniciais}
-                onSubmit={values => {
-                    //alert(JSON.stringify(values))
-                    navigation.navigate('Avaliacao',{ values: values})
+                onSubmit={(values, { resetForm }) => {
+                    //alert(JSON.stringify(values)) resetForm: resetForm 
+                    resetForm(values)
+                    navigation.navigate('Avaliacao',{ values: values}, )
                 }}
                 validationSchema={validationSchema}
                 >
@@ -133,20 +128,20 @@ const GerarAvaliacao = ({navigation}) => {
                         <View style={ Styles.touchable }>
                             <TouchableOpacity 
                                 style={Styles.bnt}
-                                // onPress={() =>(
-                                // alert("Buscar no BQP")
-                                // )}
-                                onPress={formikProps.handleSubmit}
+                                onPress={() => {
+                                    formikProps.setFieldValue('status', '3')
+                                    formikProps.handleSubmit()
+                                }}
                                 >
                                 <Text style={Styles.bntText}> Buscar no BQP </Text> 
                             </TouchableOpacity>
                             
                             <TouchableOpacity 
                                 style={Styles.bnt}
-                                // onPress={() =>(
-                                // alert("Buscar no BQM")
-                                // )}
-                                onPress={formikProps.handleSubmit}
+                                onPress={() => {
+                                    formikProps.setFieldValue('status', '2')
+                                    formikProps.handleSubmit()
+                                }}
                                 >
                                 <Text style={Styles.bntText}> Buscar no BQM </Text> 
                             </TouchableOpacity>
@@ -165,7 +160,9 @@ const Styles = StyleSheet.create({
 
     body: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        //backgroundColor: '#f8f8f8',
+        backgroundColor: '#e8f0ff',
+
         fontSize: 14,
         alignItems: 'center',
         justifyContent: 'center',
@@ -174,7 +171,7 @@ const Styles = StyleSheet.create({
     main: {
         flex: 1,
         backgroundColor: '#f8f8f8',
-        width: '100%'
+        width: '90%'
     },
 
     ScrollStyle: {

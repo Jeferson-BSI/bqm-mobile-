@@ -1,21 +1,66 @@
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
-import {StyleSheet, AsyncStorage, View, Text } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet, 
+    AsyncStorage, 
+    ScrollView,
+    ActivityIndicator
+} from 'react-native';
 
 import Body from '../components/Body';
 import Nav from '../components/Nav';
 import Info from '../components/Info';
 import Main from '../components/Main';
+import axios from 'axios';
 
 
 function PoliticaDePrivacidade() {
-
 	const navigation = useNavigation();
 
-	async function CheckLogin(){
+	const [ dados, setDados ] = useState([])
+    const [loginShow, setLoginShow] = useState(true);
 
+
+	async function getPrivacidade() {
+        let token = null
+        let id = null
+        try{
+            token = await AsyncStorage.getItem('user_token')
+            id = await AsyncStorage.getItem('user_id');
+        }
+        catch(erro){
+            alert(erro+"ao recupera do storage")
+        }
+
+        try{
+            const ApiGet = axios.create({
+                baseURL: 'https://bq.mat.br/', //'https://bq.mat.br/api/v1',
+                timeout: 100,
+                //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
+                headers: {'Authorization': 'Token ' + token}
+            });
+            
+            const response = await ApiGet.get('/politica_de_privacidade.json');
+			const { data } = response.data
+            setDados(response.data),
+            setLoginShow(false);
+			//alert(dados)
+
+        }
+        catch(erro){
+            alert(erro)
+            alert('O correu um erro!')
+        }
+    }
+
+
+
+
+	async function CheckLogin(){
 
 		let UserToken = ''
 
@@ -49,6 +94,7 @@ function PoliticaDePrivacidade() {
    			CheckLogin()
 	    });
 
+		getPrivacidade()
 	    return unsubscribe;
 
   	}, [navigation]);
@@ -63,45 +109,22 @@ function PoliticaDePrivacidade() {
 
             <Info>POLÍTICA DE PRIVACIDADE</Info>
 
-            <View style={styles.main}>
-				<View style={styles.conteiner}>
-					<Text style={styles.text}>
-						1. Informações gerais
-					</Text>
-					
-					<Text style={styles.text}>
-						2. Direitos do usuário
-					</Text>
+            {
+                (loginShow)
+                ?<ActivityIndicator  size='large' color='blue'  />
+                :<View style={styles.main}>
+                    <ScrollView style={styles.conteiner}>
+                        {
+                            dados.map(value =>(
+                                <Text key={value+Math.floor(Math.random() * 100)} style={(isNaN(value[0][0]))?styles.text:styles.title}>
+                                {value}
+                                </Text>
+                            ))
+                        }
+                    </ScrollView>
+                 </View>
+            }
 
-					<Text style={styles.text}>
-						3. Dever de não fornecer dados de terceiros
-					</Text>
-
-					<Text style={styles.text}>
-						4. Da coleta e tratamento dos dados
-					</Text>
-
-					<Text style={styles.text}>
-						5. Do tratamento dos dados pessoais
-					</Text>
-
-					<Text style={styles.text}>
-						6. Segurança no tratamento dos dados pessoais do usuário
-					</Text>
-
-					<Text style={styles.text}>
-						7. Dados de navegação (cookies)
-					</Text>
-
-					<Text style={styles.text}>
-						8. Das alterações
-					</Text>
-
-					<Text style={styles.text}>
-						9. Do Direito aplicável e do foro
-					</Text>
-				</View>
-            </View>
         </View>
        
     )
@@ -119,9 +142,9 @@ const styles = StyleSheet.create({
 
     main: {
         flex: 1,
-        //marginTop: 30,
+        marginTop: -5,
         backgroundColor: '#f8f8f8',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     conteiner: {
@@ -130,9 +153,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(152, 148, 148, 0.1)',
 
         width: '95%',
-        paddingVertical: 15,
+        paddingVertical: 20,
         paddingHorizontal: '3%',
-        marginVertical: '4%',
+        marginVertical: '2%',
 
         borderRadius: 5,
         borderColor: '#e1e1e8',
@@ -140,12 +163,20 @@ const styles = StyleSheet.create({
         
     },
 
-    text: {
-        fontSize: 17,
+	title: {
+		fontSize: 18,
         fontWeight: '700',
         color: '#286090',
-        textAlign: 'justify'
+        textAlign: 'justify',
+		marginBottom: 5
+	},
 
+    text: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#286090',
+        textAlign: 'justify',
+		marginBottom: 17
     }
 });
 

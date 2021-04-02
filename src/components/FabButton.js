@@ -1,54 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { 
     View, 
     StyleSheet, 
     TouchableWithoutFeedback,
-    AsyncStorage
 } from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import DeleteQuestoes from '../funções/DeleteQuestoes';
-import axios from 'axios'
+import OptionModal from '../components/OptionModal';
+
+
 
 export default function FabButton(props){
-    const {list} = props
-    function Deletar(){
-        if(list.length == 0){
-            return}
-        alert(list)
-        DeleteQuestoes()
-        // const array = list.filter(DeleteQuestoes)
-        // if(array.length == 0){
-        //     alert('Questões deletadas');
-        // }
-    }
-    async function Deletar() {
-        const token = await AsyncStorage.getItem('user_token')
+    const { list, setList, data, setData  } = props
+    const questoes = [...data]
+    const listaQuestoes = [...list]
+    const [ isVisible, setVisible] = useState(false);
 
-        const ApiDelete = axios.create({
-            baseURL: 'https://bq.mat.br/api/v1',
-            timeout: 100,
-            //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
-            headers: {'Authorization': 'Token ' + token}
-        });
-    
-        try{
-            const response = await ApiDelete.delete(`/questao/${2}/`)
-            alert(JSON.stringify(response))
+
+    function Deletar(){
+        setVisible(!isVisible);
+        if(list.length == 0){
+            return 
         }
-        catch(err){
-           alert(err+ ' ao deletar')
+
+        for (let ind in list) {
+            const id = list[ind].id
+            DeleteQuestoes(id);
+            listaQuestoes.splice(listaQuestoes.indexOf(list[ind]), 1);
+            questoes.splice(questoes.indexOf(list[ind]), 1)
+        }
+
+        setList(listaQuestoes)
+
+        if(listaQuestoes.length == 0){
+            //alert('Questões deletadas');
+            setData(questoes)
         }
     }
+
 
     return(
         <View style={[styles.conteiner, props.style]}>
             <TouchableWithoutFeedback
-                onPress={()=>Deletar()}
+                onPress={()=> setVisible(!isVisible)}
                 >
                 <View style={[styles.button, styles.menu]}>
                     <AntDesign name='delete' size={30} color='#fff'/>
                 </View>
             </TouchableWithoutFeedback>
+
+            <OptionModal 
+                texto={'Deseja excluir às questões?'} 
+                isVisible={isVisible}
+                onPress={Deletar}
+                onPress2={()=>setVisible(!isVisible)}
+            />
+
         </View>
     )
 }

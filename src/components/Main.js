@@ -15,7 +15,7 @@ const Main = (props) => {
 const styles = StyleSheet.create({
 
     main: {
-        backgroundColor: '#fff',
+        backgroundColor: '#e8f0ff',
         flex: 1,
         flexDirection:'column',
         marginTop: 0,

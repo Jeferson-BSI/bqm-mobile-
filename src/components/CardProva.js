@@ -5,43 +5,60 @@ import {
     Text, 
     TouchableOpacity 
 } from 'react-native';
-
 import {AntDesign, FontAwesome} from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 function CardProva(props) {
+    const {setVisible, setVisibleTwo, setObj, value, token} = props;
+    const navigation = useNavigation();
+
+    const {nome, id, qids } = value;
+
+    const deletar = () => {
+        //setId(id)
+        setObj(value)
+        setVisible(true) 
+        
+     }
+
+     const atualizar = () =>{
+        //setId(id)
+        setObj(value)
+        setVisibleTwo(true) 
+     }
+
     return (
-        <View style={ styles.conteinerCard }>
+        <TouchableOpacity 
+        style={ styles.conteinerCard }
+        onPress={() => navigation.navigate('tests', {token:token, qids: qids, nome: nome})
+    }
+        >
             <View style={{alignSelf: 'center'}}>
                 <Text style={styles.title}>
-                    {props.name}
+                    {nome}
                 </Text>
             </View>
 
             <View style={styles.iconConteiner}>
                 <TouchableOpacity
-                onPress={()=>alert('Deletar')}
+                onPress={deletar}
                 >
-                        <AntDesign name='delete' color='#286090' size={30}/>
+                    <AntDesign name='delete' color='#286090' size={30}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={()=>alert('Editar')}>
-                        <FontAwesome name='edit' color='#286090' size={30}/>
+                <TouchableOpacity onPress={atualizar}>
+                    <FontAwesome name='edit' color='#286090' size={30}/>
                 </TouchableOpacity>
 
-                {/* <TouchableOpacity>
-                    <View style={{with: 25, height: 25}}>
-                        <SvgXml xml={ iconEdit } />
-                    </View>
-                </TouchableOpacity> */}
             </View>
-        </View>
+        </TouchableOpacity>
 )};
 
 
 const styles = StyleSheet.create({
     conteinerCard: {
-        backgroundColor: 'rgba(152, 148, 148, 0.2)',
+        backgroundColor: '#f7f7f9',//'rgba(152, 148, 148, 0.1)',
         marginVertical: '3%',
 
         //alignItems: 'center',
@@ -53,14 +70,15 @@ const styles = StyleSheet.create({
         //maxWidth: '40%',
         height: 100,
 
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#e6e6e6',
-        //elevation: 1
+        borderBottomWidth: 2,
+        borderRadius: 8,
+        //borderColor: '#f5f5f5',//'#e6e6e6',
+        borderBottomColor: 'black',
+        elevation: 1
     },
 
     title:{
-        color:'#286090',
+        color: '#48484c',//'#286090',
         fontFamily: 'serif',
         fontSize: 15,
         fontWeight: '700',

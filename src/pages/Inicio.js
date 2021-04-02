@@ -89,20 +89,20 @@ function Inicio() {
                     isLooping
                     style={{ width: 300, height: 300 }}
                     /> */}
-{/* 
+
                < VideoPlayer
                     videoProps={{
                         shouldPlay: false,
                         resizeMode: Video.RESIZE_MODE_CONTAIN,
                         isLooping: true,
                         source: {
-                        uri:  'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                        uri:  'http://10.0.2.2:8000/media/video.webm' //'https://bq.mat.br/media/video.webm',
                         },
                     }}
                     width={300}
                     height={300}
                     inFullscreen={true}
-                /> */}
+                />
                 </View>
 
             </Main>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginTop: 10,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     styleText: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
 
         borderRadius: 5,
         borderColor: '#e1e1e8',
-
+        
         
     },
     
