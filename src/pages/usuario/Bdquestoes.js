@@ -4,12 +4,10 @@ import {
     Text, 
     StyleSheet, 
     TouchableOpacity,
-    AsyncStorage
 } from 'react-native';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import { SvgXml } from 'react-native-svg';
-import QuestionStorage from '../../funções/QuestionStorage'
 
 function Bdquestoes({ navigation}) {
 
@@ -59,19 +57,7 @@ function Bdquestoes({ navigation}) {
         </defs>
         </svg> `;
 
-    // const navAddQuestoes = async() =>{
-    //     try {
-    //         const value = await AsyncStorage.multiGet(['etapa', 'unidadetematica', 'objetodeconhecimento', 'niveldedificuldade']);
-    //         if (value !== null) {
-    //             navigation.navigate('AddQuestoes', value)
 
-    //         }
-    //     } 
-    //     catch (error) {
-    //         alert(error+' => aqui')
-    //     }
-        
-    // };
 
     return (
         <View style={Styles.body}>

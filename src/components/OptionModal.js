@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -9,16 +9,15 @@ import {
 import Modal from 'react-native-modal';
 
 function OptionModal(props){
-    const { texto, isVisible } = props;
+    const { texto, isVisible, setVisible } = props;
     const { onPress, onPress2 } = props;
 
     return(
         <Modal isVisible={isVisible} 
-        animationType="slide"
+        animationType={"fade"}
         transparent={true}
         onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!isVisible);
+            setVisible(!isVisible);
         }}
         >
             <View style={styles.centeredView}>

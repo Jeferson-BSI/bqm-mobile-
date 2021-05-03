@@ -31,7 +31,7 @@ function CardProva(props) {
     return (
         <TouchableOpacity 
         style={ styles.conteinerCard }
-        onPress={() => navigation.navigate('tests', {token:token, qids: qids, nome: nome})
+        onPress={() => navigation.navigate('ShowAvaliacao', {token:token, qids: qids, nome: nome, id: id})
     }
         >
             <View style={{alignSelf: 'center'}}>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         width: '45%',
-        //maxWidth: '40%',
+        minWidth: '40%',
         height: 100,
 
         borderBottomWidth: 2,

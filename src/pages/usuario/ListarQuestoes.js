@@ -17,7 +17,6 @@ import axios from  'axios';
 import Modal from 'react-native-modal';
 
 
-
 // Para instalar as bibliotecas necessárias basta executar: 'yarn add react-native-modal or npm i react-native-modal.' 
 function ListarQuestoes() {
     const [data, setData] = useState([]);
@@ -25,6 +24,8 @@ function ListarQuestoes() {
     const [loginShow, setLoginShow] =useState(true);
     const [ visible, setVisible] = useState(false);
     const [ dataQuestao, setDataQuestao] = useState(false);
+    const [veri, setVeri ] = useState(false);
+
 
 
     async function getQuestoes(){
@@ -34,8 +35,8 @@ function ListarQuestoes() {
         const ApiGet = axios.create({
             baseURL: 'https://bq.mat.br/api/v1',
 
-           // baseURL: 'http://10.0.2.2:8000/api/v1',
-            timeout: 100,
+            //baseURL: 'http://10.0.2.2:8000/api/v1',
+            timeout: 500,
             //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
             headers: {'Authorization': 'Token ' + token},
         });
@@ -43,15 +44,32 @@ function ListarQuestoes() {
         try{
             const response = await ApiGet.get(`/questao/?status=3`)
             const { results } = response.data
+            setVeri(true)
             setData(results);
             setLoginShow(false)
         }
         catch(erro) {
-            alert(erro)
+            setVeri(false)
+            return
+        }
+        setVeri(false)
+    }
+
+    const getRequest = () =>{
+        try{
+            getQuestoes()
+        }
+        catch{
+            getQuestoes()
+        }
+        finally{
+            if(!veri){
+                getQuestoes()
+            }
         }
     }
 
-    useEffect(() =>{getQuestoes()}, [])
+    useEffect(() =>{getRequest()}, [])
 
     return (
         <View style={styles.body}>
@@ -104,21 +122,23 @@ function ListarQuestoes() {
 
                         <View >
                             <Text style={ styles.textAp }>Pergunta:  </Text>
-                            <Text style={ styles.textPergunta } >{ dataQuestao.pergunta } </Text>
+                            <Text style={ styles.textPergunta } >{ (dataQuestao)?
+                            dataQuestao.resposta.replace(/['</]ul[>]/g, '').replace(/[\\<]/g, '').replace(/[br>div]/, '')
+                            :dataQuestao.resposta} </Text>
                         </View>
 
                         <View style={{marginBottom: 50}}>
                             <Text style={ styles.textAp}>Resposta:  </Text>
-                            <Text style={ styles.textPergunta }> { dataQuestao.resposta } </Text>
+                            <Text style={ styles.textPergunta }> { (dataQuestao)?
+                            dataQuestao.resposta.replace(/['</]ul[>]/g, '').replace(/[\\<]/g, '').replace(/[br>div]/, '')
+                            :dataQuestao.resposta} </Text>
                         </View>
                     </ScrollView>
                     <TouchableOpacity onPress={() => { setVisible(false)}}>
                         <Button color='#0b2639' title='Fechar' onPress={() => { setVisible(false)}}/>
                     </TouchableOpacity>
-
                 </View>
             </Modal>
-
         </View>   
     )
 };
@@ -181,12 +201,12 @@ const styles = StyleSheet.create({
       },
 
     modalView: {
-    margin: 20,
+    margin: 10,
     backgroundColor: "white",
-    //borderRadius: 15,
-    minWidth: '80%', 
+    borderRadius: 15,
+    minWidth: '95%', 
     padding: 20,
-    paddingBottom: 50,
+    //paddingBottom: 30,
     //alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -197,7 +217,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
     },
-
 });
 
 

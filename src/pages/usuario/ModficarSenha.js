@@ -15,7 +15,8 @@ function ModSenha() {
 
     const [senha, setSenha] = useState('');
     const [novaSenha, setNovaSenha] = useState(''); 
-    const [novaSenha2, setNovaSenha2] = useState('');                        
+    const [novaSenha2, setNovaSenha2] = useState('');  
+
                        
 
     return (
@@ -82,7 +83,6 @@ function ModSenha() {
 
             {/* </View> */}
             </ScrollView>
-            
             
         </KeyboardAvoidingView>
     )

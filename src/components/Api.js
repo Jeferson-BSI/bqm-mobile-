@@ -8,9 +8,9 @@ import axios from 'axios';
 */
 
 const Api = axios.create({
- // baseURL: 'https://bq.mat.br/api/v1',
+  baseURL: 'https://bq.mat.br/api/v1',
   
-  baseURL: 'http://10.0.2.2:8000/api/v1',//'https://bq.mat.br/api/v1',
+  //baseURL: 'http://10.0.2.2:8000/api/v1',//'https://bq.mat.br/api/v1',
 });
 
 

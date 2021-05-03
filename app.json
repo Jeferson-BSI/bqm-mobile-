@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "bqm",
-    "slug": "bqm",
+    "name": "BQM",
+    "slug": "BQM",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#28608f"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +23,13 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.bqm.bqmmobile",
+      "package": "br.mat.bq",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#28608f"
+      },
+
+      "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE", "READ_INTERNAL_STORAGE"],
       "versionCode": 1
     }
   }

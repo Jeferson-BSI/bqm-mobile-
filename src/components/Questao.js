@@ -66,31 +66,6 @@ export default function Questao(props) {
                 </View>
             </TouchableOpacity>
 
-            {/* <Modal isVisible={ visible }>
-                <View style={ {backgroundColor: 'white', height: '50%', justifyContent: 'space-between'}}>
-                    <View style={styles.questao}>
-
-                        <View style={ {flexDirection: 'row'}}>
-                            <Text  style={ styles.textAp }>Área: </Text>
-                            <Text style={ styles.title }>{ data.area } </Text>
-                        </View>
-
-                        <View style={{marginVertical: 10}}>
-                            <Text style={ styles.textAp }>Pergunta:  </Text>
-                            <Text style={ styles.textPergunta } >{ data.pergunta } </Text>
-                        </View>
-
-                        <View style={{marginVertical: 10}}>
-                            <Text style={ styles.textAp}>Resposta:  </Text>
-                            <Text style={ styles.textPergunta }> { data.resposta } </Text>
-                        </View>
-                    </View>
-                    <TouchableOpacity onPress={() => { setVisible(false)}}>
-                        <Button color='#0b2639' title='Fechar' onPress={() => { setVisible(false)}}/>
-                    </TouchableOpacity>
-
-                </View>
-            </Modal> */}
         </View>
     )
 }

@@ -4,15 +4,19 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Inicio from '../pages/Inicio';
 import Entrar from '../pages/Entrar';
 import Sobre from '../pages/Sobre';
+import Cadastro from '../pages/Cadastro';
+
 import GerarAvaliacao from '../pages/usuario/GerarAvaliacao';
 import Avaliacao from '../pages/usuario/Avaliacao';
+import PlusQuestion from '../pages/usuario/PlusQuestion';
+
 import Configuracao from '../pages/usuario/Configuracao';
 import Bdquestoes from '../pages/usuario/Bdquestoes';
 import AddQuestoes from '../pages/usuario/AddQuestoes';
 import ListarQuestoes from '../pages/usuario/ListarQuestoes';
 import ModficarSenha from '../pages/usuario/ModficarSenha';
 import Manual from '../pages/usuario/Manual';
-import tests from '../pages/usuario/tests';
+import ShowAvaliacao from '../pages/usuario/ShowAvaliacao';
 
 
 import Epsilon from '../pages/usuario/Epsilon';
@@ -136,6 +140,17 @@ const Routes = () => (
             }}
         />
 
+        <RoutesStack.Screen
+            name='PlusQuestion'
+            component={ PlusQuestion }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}
+        />
+
         
         <RoutesStack.Screen
             name='Manual'
@@ -193,8 +208,8 @@ const Routes = () => (
         />
 
         <RoutesStack.Screen
-            name='tests'
-            component={ tests }
+            name='ShowAvaliacao'
+            component={ ShowAvaliacao }
             options={{
                 transitionSpec: {
                   open: config,
@@ -202,6 +217,18 @@ const Routes = () => (
                 },
             }}
         />
+
+        <RoutesStack.Screen
+            name='Cadastro'
+            component={ Cadastro }
+            options={{
+                transitionSpec: {
+                  open: config,
+                  close: config,
+                },
+            }}
+        />
+
 
     </RoutesStack.Navigator>
 );

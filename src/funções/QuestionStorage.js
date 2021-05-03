@@ -4,17 +4,18 @@ import {
 import axios from 'axios';
 
 
-async function QuestionStorage(op){
+async function QuestionStorage(op, setData){
     const token = await AsyncStorage.getItem('user_token')
 
     const ApiGet = axios.create({
-        baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
-        timeout: 50,
+        baseURL: 'https://bq.mat.br/api/v1',
+        //baseURL: 'https://bq.mat.br/api/v1', //'https://bq.mat.br/api/v1',
+        timeout: 200,
         //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
         headers: {'Authorization': 'Token ' + token}
     });
 
-    
+    var p = 0
     try{
         let page = 1
         let dados = []
@@ -26,7 +27,9 @@ async function QuestionStorage(op){
 
 
             if(next !== null){
-                page++}
+                page++
+                p = page
+            }
             else{
                 break}
         }
@@ -34,6 +37,7 @@ async function QuestionStorage(op){
         
         if(dados !== null){
             try{
+                setData(dados)
                 await AsyncStorage.setItem(op, JSON.stringify(dados))
             }
             catch(erro){
@@ -42,7 +46,7 @@ async function QuestionStorage(op){
         }
     }
     catch(erro) {
-        alert(erro)
+        //alert(erro)
     }
 
 };

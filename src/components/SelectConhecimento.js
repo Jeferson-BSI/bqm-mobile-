@@ -12,7 +12,7 @@ const selectConhecimento = (props) => {
             let dados = await AsyncStorage.getItem('objetodeconhecimento');
             
             if(dados === null){
-                QuestionStorage('objetodeconhecimento');
+                QuestionStorage('objetodeconhecimento', setData);
             }
             
             dados = await AsyncStorage.getItem('objetodeconhecimento');

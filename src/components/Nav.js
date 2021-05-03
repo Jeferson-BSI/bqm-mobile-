@@ -15,17 +15,38 @@ const Nav = (props) => {
 
     async function NavOnePress_3(){
       //alert('NavOnePress')
-      navigation.navigate('Sobre')
+     // navigation.navigate('Sobre')
+      navigation.reset({
+        routes: [
+          {
+            name: 'Sobre',
+          },
+        ],
+    })
     }
 
     async function NavTwoPress_3(){
       //alert('NavTwoPress')
-      navigation.navigate('PoliticaDePrivacidade')
+      //navigation.navigate('PoliticaDePrivacidade')
+      navigation.reset({
+        routes: [
+          {
+            name: 'PoliticaDePrivacidade',
+          },
+        ],
+    })
     }
 
     async function NavThreePress_3(){
       //alert('NavThreePress')
-      navigation.navigate('Entrar')
+      //navigation.navigate('Entrar')
+      navigation.reset({
+        routes: [
+          {
+            name: 'Entrar',
+          },
+        ],
+    })
     }
 
     const NavOne_3 = `
@@ -147,7 +168,7 @@ const Nav = (props) => {
       // }
 
       async function NavFivePress_5(){
-        navigation.navigate('Epsilon')
+        navigation.navigate('Epsilon', {update: true})
         //alert('NavFourPress_5')
       }
 

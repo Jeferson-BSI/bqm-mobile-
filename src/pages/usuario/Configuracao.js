@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState}  from 'react';
 import { 
     View, 
     Text, 
@@ -7,14 +7,16 @@ import {
     ScrollView, 
     AsyncStorage 
 } from 'react-native';
-import Body from '../../components/Body';
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
-import Main from '../../components/Main';
 import { SvgXml } from 'react-native-svg';
+import InfoModal from '../../components/InfoModal';
+
 
 
 function Configuracao({ navigation }) {
+    const [ isVisible, setVisible ] = useState(false);
+
     const Icon = `      
     <svg width="300" height="100" viewBox="0 0 576 512">
         <path
@@ -68,13 +70,19 @@ function Configuracao({ navigation }) {
                     <TouchableOpacity 
                     style={Styles.bnt}
                     onPress={() => (
-                        navigation.navigate('ModficarSenha')
+                        //navigation.navigate('ModficarSenha')
+                        setVisible(!isVisible)
                     )}
                     >
                         <Text style={Styles.bntText}> Modificar senha </Text> 
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={Styles.bnt}>
+                    <TouchableOpacity 
+                      style={Styles.bnt}
+                      onPress={() =>{ 
+                          setVisible(!isVisible);
+                    }}
+                    >
                         <Text style={Styles.bntText}> Excluir conta </Text> 
                     </TouchableOpacity>
 
@@ -87,6 +95,15 @@ function Configuracao({ navigation }) {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
+
+            <InfoModal 
+             isVisible={isVisible}
+             texto={'Essa opção ainda não está disponível!'}
+             onPress={() =>{ 
+                setVisible(!isVisible);
+            }}
+             option={'OK'}
+            />
         </View>
     )
 };

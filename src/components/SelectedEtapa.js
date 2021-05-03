@@ -16,11 +16,12 @@ const selectedEtapa = (props) => {
         try {
             let dados = await AsyncStorage.getItem('etapa');
             if(dados === null){
-                QuestionStorage('etapa');
+                QuestionStorage('etapa', setData);
             }
-    
+            if(data === null){
             dados = await AsyncStorage.getItem('etapa');
             setData(JSON.parse(dados))
+        }
         }
         catch (erro){
             alert(erro)

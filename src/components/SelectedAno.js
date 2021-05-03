@@ -4,8 +4,7 @@ import { View, Picker, StyleSheet} from 'react-native';
 
 const selectedAno = (props) => {
     //alert(props.selectedValue)
-    const {op, formikProps, formikKey, styleErro } = props
-
+    const {formikProps, formikKey, styleErro } = props
 
 
     const PickerItem = (i,f) => {

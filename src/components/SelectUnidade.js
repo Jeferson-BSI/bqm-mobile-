@@ -12,7 +12,7 @@ const selectedUnidade = (props) => {
         try {
             let dados = await AsyncStorage.getItem('unidadetematica');
             if(dados === null){
-                QuestionStorage('unidadetematica');
+                QuestionStorage('unidadetematica', setData);
             }
     
             dados = await AsyncStorage.getItem('unidadetematica');

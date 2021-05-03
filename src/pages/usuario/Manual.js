@@ -43,8 +43,8 @@ function Configuracao({ navigation }) {
 
         }
         catch(erro){
-            alert(erro)
-            alert('O correu um erro!')
+           // alert(erro)
+            //alert('O correu um erro!')
         }
     }
     useEffect(() =>{getManual()}, [])

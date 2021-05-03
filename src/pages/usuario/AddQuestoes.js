@@ -2,22 +2,20 @@ import React, { useState } from 'react';
 import { 
     View,
     Text,
+    Image,
     TouchableOpacity, 
     ScrollView, 
     StyleSheet, 
     TextInput,
     AsyncStorage,
-    Button
+    ActivityIndicator,
 } from 'react-native';
 import { Formik } from 'formik';
 import axios from 'axios';
 import * as yup from "yup";
 import InfoModal from '../../components/InfoModal';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-
 
 import Nav from '../../components/Nav';
 import Info from '../../components/Info';
@@ -26,9 +24,7 @@ import SelectedAno from '../../components/SelectedAno';
 import SelectUnidade from '../../components/SelectUnidade';
 import SelectConhecimento from '../../components/SelectConhecimento';
 import SelectNivel from '../../components/SelectNivel';
-import FormRow from '../../components/FormRow';
-import Axios from 'axios';
-import { set } from 'react-native-reanimated';
+
 
 
 const validationSchema = yup.object().shape({
@@ -76,7 +72,7 @@ const valoresIniciais = {
     pergunta: '',
     resposta: '',
     nivel: '',
-    imagem: '',
+    imagem: null,
     etapa: '',
     ano: '',
     unidade: '',
@@ -86,16 +82,17 @@ const valoresIniciais = {
 
 const AddQuestoes = () => {
     const [ isVisible, setVisible ] = useState(false);
-    const [ imgData, setImgData ] = useState();
-    const [ imgUri, setImgUri ] = useState('');
+    const [ isVisibleErr, setVisibleErr ] = useState(false);
+    const [ imgData, setImgData ] = useState(null);
+    const [shouldShow, setShouldShow] = useState(true);
+    const [veri, setVeri ] = useState(false);
     
-
+    
 
     async function imagePickerCall(){
         const data = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images
         });
-        //console.log(data);
 
         if(data.cancelled){
             return;
@@ -107,86 +104,101 @@ const AddQuestoes = () => {
         setImgData(data)
     }
 
-    async function uploadImage(){
+
+    async function uploadImage(values, resetForm){
+        setShouldShow(false);
+        if(imgData === null){
+            cadastrarQuestao(values, resetForm, 0);
+            return
+        }
+
         let token = null;
+        try{
+            token = await AsyncStorage.getItem('user_token');
+        }
+        catch{
+            token = await AsyncStorage.getItem('user_token');
+        }
 
         const data = new FormData();
-            token = await AsyncStorage.getItem('user_token')
+        
+        const uri = imgData.uri
+        const name = uri.split('/').slice(-1)[0];
+        const type = 'image/'+ name.split('.').slice(-1)[0];
 
         data.append('upload', {
-            "name": "1c544f80",
-            "uri": imgData.uri,
-            "type": imgData.type,
+            uri: uri,
+            name: name,
+            type: type,
         })
-
-        data.append('upload', {
-            "name": "1c544f80",
-            "uri": imgData.uri,
-            "type": imgData.type,
-        })
-        //alert(token)
+        
         const Apipost = axios.create({
-        baseURL: 'http://10.0.2.2:8000/api/v1',//'https://beta.bq.mat.br/api/v1',
-        timeout: 100,
-            headers: {'Authorization': 'Token ' + token},
-            headers: {'Content-Type': 'multipart/form-data'},
+        baseURL: 'https://bq.mat.br/api/v1',
+        timeout: 500,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Token ' + token
+          }
           });
-
-        try{
-         // console.log(JSON.stringify( data));
-          const response = await Apipost.post('/upload/', {data});
-          console.log(response);
-          alert(response);
-        }
-        catch(err_){
-            alert(err_);
-        }
-    
+          try{
+              const response = await Apipost.post('/upload/', data);  
+              setImgData(null)        
+              cadastrarQuestao(values, resetForm, response.data.id);
+            }
+            catch(err_){
+                setVisibleErr(!isVisibleErr);
+            }
     }
 
-    async function cadastarQuestao(values, resetForm) {
+
+    async function cadastrarQuestao(values, resetForm, idImg) {
         let token = null
         let id = null
+
         try{
             token = await AsyncStorage.getItem('user_token')
             id = await AsyncStorage.getItem('user_id');
         }
         catch(erro){
-            alert(erro+"ao recupera do storage")
-        }
- 
-        const questao = {
-            "status": "3",
-            "etapa": values.etapa,
-            "ano": values.ano,
-            "unidade_tematica": values.unidade,
-            "objeto_de_conhecimento": values.conhecimento,
-            "nivel_de_dificuldade": values.nivel,
-            "imagem": values.image,
-            "pergunta": values.pergunta,
-            "resposta": values.resposta,
-            "cadastro_pelo_usuario": id
+            setVisibleErr(!isVisibleErr);
+            return;
         }
 
         try{
             const ApiGet = axios.create({
-                baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
-                timeout: 100,
-                //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
+                //baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
+                baseURL: 'https://bq.mat.br/api/v1',
+                timeout: 500,
                 headers: {'Authorization': 'Token ' + token}
             });
             
+            const questao = {
+                "status": "3",
+                "etapa": values.etapa,
+                "ano": values.ano,
+                "unidade_tematica": values.unidade,
+                "objeto_de_conhecimento": values.conhecimento,
+                "nivel_de_dificuldade": values.nivel,
+                "imagem": idImg,
+                "pergunta": values.pergunta,
+                "resposta": values.resposta,
+                "cadastro_pelo_usuario": id
+            }
+    
             const response = await ApiGet.post('/questao/', questao);
-            (response !== null)
-            ?setVisible(true)
-            :null
+            if(response !== null){
+                setVisible(true);
+                setShouldShow(true);
+            }
             resetForm(valoresIniciais)
         }
         catch(erro){
-            alert(erro)
-            alert('O correu um erro ao cadastra a questão!')
+            setVisibleErr(!isVisibleErr);
+            throw 42
         }
     }
+
 
 
     return(
@@ -201,7 +213,14 @@ const AddQuestoes = () => {
                 <Formik
                     initialValues={valoresIniciais}
                     onSubmit={(values, {resetForm}) => {
-                        cadastarQuestao(values, resetForm)
+                        try{
+                            uploadImage(values, resetForm)
+                        }
+                        catch{
+                            console.log('entro erro')
+                            uploadImage(values, resetForm)
+                        }
+
                     }}
                     validationSchema={validationSchema}
                 >
@@ -246,31 +265,30 @@ const AddQuestoes = () => {
                             formikKey={'nivel'}
                             formikProps={formikProps}
                             styleErro={Styles.styleErro}
-                            //selectedValue={formikProps.values.nivel}
-                            //selectedValue={selectedNivel}
-                            //onValueChange={formikProps.setFieldValue}
-                            //onValueChange={setSelectednivel}
                         />
                         <Text style={{color: "red"}}>{formikProps.touched.nivel && formikProps.errors.nivel}</Text>
                     </View>
 
-                    <TouchableOpacity style={Styles.imgStyle} onPress={imagePickerCall}>
-                        <MaterialCommunityIcons name='image-plus' color='#286090' size={30}/>
-                        <Text style={[Styles.text, {paddingRight: 15, fontSize: 15} ]}>Adicionar imagem</Text>
+                    <View style={Styles.imgConteiner}>
+
+                    <TouchableOpacity style={Styles.imgConteinerStyles} onPress={imagePickerCall}>
+                        {(imgData)?
+                        <Image source={{uri: imgData.uri}}style={Styles.imgStyle}/>
+                        : <>
+                        <MaterialCommunityIcons name='image-plus' color='#286090' size={40}/>
+                        <Text style={[Styles.text, {paddingLeft: 0, fontSize: 15} ]}>Adicionar imagem</Text>
+                        </>
+                    }  
                     </TouchableOpacity>
 
-{/*                     
-                    <Text style={Styles.text}>URL da imagem, caso haja.</Text>
-                    <FormRow>
-                    <TextInput
-                        style={ [Styles.textInput, {width: '100%'}] }
-                        placeholderTextColor= { '#0b2639' }
-                        placeholder='URL'
-                        onChangeText={formikProps.handleChange('imagem')}
-                        value={formikProps.values.imagem}
-                    /> 
-                
-                    </FormRow> */}
+                    <TouchableOpacity 
+                    style={Styles.iconClear}
+                    onPress={() => setImgData(null)}
+                    >
+                        <MaterialIcons name='clear' color='#f79c9c' size={40}/>
+                        <Text style={[Styles.text, {paddingLeft: 0, fontSize: 12, color:'#f79c9c' } ]}>Limpar</Text>
+                    </TouchableOpacity>
+                    </View>
 
                     <Text style={Styles.text}>Pergunta</Text>
                     <TextInput
@@ -279,7 +297,6 @@ const AddQuestoes = () => {
                         placeholder='Digite a pergunta aqui!'
                         textAlignVertical= 'top'
                         multiline={true}
-                        //onChangeText={text => setPerguta(text)}
                         onChangeText={formikProps.handleChange('pergunta')}
                         value={formikProps.values.pergunta}
                         onBlur={formikProps.handleBlur('pergunta')}
@@ -300,27 +317,38 @@ const AddQuestoes = () => {
 
                     <Text style={{color: "red"}}>{formikProps.touched.resposta && formikProps.errors.resposta}</Text>
                     
-                    <TouchableOpacity 
-                    style={Styles.bnt}
-                    onPress={formikProps.handleSubmit}
+                    { shouldShow ?(
+                        <TouchableOpacity 
+                        style={Styles.bnt}
+                        onPress={formikProps.handleSubmit}
                         >
-                        <Text style={{color: 'white', fontSize: 18,}}> Cadastrar questão </Text> 
-                    </TouchableOpacity>
+                            <Text style={{color: 'white', fontSize: 18,}}> Cadastrar questão </Text> 
+                        </TouchableOpacity>
+                    )
+                    :(
+                        <View style={ Styles.mainActivityIndicator }>
+                            <ActivityIndicator  size='large' color='#fff'  />
+                        </View>
+                    )}
+                    
                 </>
                     )}
                 </Formik>
             </ScrollView>
-            <Button
-            onPress={uploadImage}
-            title="Learn More"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-            />
 
             <InfoModal 
              isVisible={isVisible}
              texto={'Maravilha! Questão registrada com sucesso!'}
              onPress={() => setVisible(!isVisible)}
+             option={'OK'}
+             />
+            <InfoModal 
+             isVisible={isVisibleErr}
+             texto={'Erro ao cadastra a questão. Tente novamente!'}
+             onPress={() =>{ 
+                setVisibleErr(!isVisibleErr);
+                setShouldShow(true);
+            }}
              option={'OK'}
              />
         </View>
@@ -332,7 +360,6 @@ const Styles = StyleSheet.create({
 
     body: {
         flex: 1,
-        //backgroundColor: '#f8f8f8',
         backgroundColor: '#e8f0ff',
         fontSize: 14,
         alignItems: 'center',
@@ -363,7 +390,6 @@ const Styles = StyleSheet.create({
         color:'#0b2639',
         fontSize: 17,
         fontWeight: 'bold',
-
 
         paddingLeft: '5%',
         marginBottom: 5
@@ -406,18 +432,52 @@ const Styles = StyleSheet.create({
     styleErro: {
         borderColor:'red'
     },
+    imgConteiner: {
+        width: '90%',
+        height: '9%',
+        flexDirection: 'row',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        marginBottom: 20,
+    },
 
-    imgStyle: {
-        padding: 10,
+    imgConteinerStyles: {
+        height: '100%',
         alignItems: 'center',
         borderColor: '#e8f0ff',
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: '#e8f0ff',
-        marginBottom: 5,
-        elevation: 5
+       
+        marginRight: 18,
+        elevation: 5,
+        justifyContent: 'center'
+    },
+    imgStyle: {
+        minWidth: 200,
+        height: '100%',
+    },
+    iconClear: {backgroundColor: '#e8f0ff',
+     borderRadius: 10,
+      padding: 5
+    },
 
-    }
+    mainActivityIndicator: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color:'#0b2639',
+        marginTop: 10,
+        marginBottom: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        width: '90%',
+        height: 45,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#002907',
+        backgroundColor: '#0b2639',
+        elevation: 3,
+    },
 });
 
 

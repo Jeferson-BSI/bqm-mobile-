@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
     View,
     Text,
@@ -7,13 +7,13 @@ import {
     StyleSheet, 
 } from 'react-native';
 
-import Nav from '../../components/Nav';
-import Info from '../../components/Info';
 import SelectedEtapa from '../../components/SelectedEtapa';
 import SelectedAno from '../../components/SelectedAno';
 import SelectUnidade from '../../components/SelectUnidade';
 import SelectConhecimento from '../../components/SelectConhecimento';
 import SelectNivel from '../../components/SelectNivel';
+import Modal from 'react-native-modal';
+
 import { Formik } from 'formik';
 import * as yup from "yup";
 
@@ -22,34 +22,27 @@ const validationSchema = yup.object().shape({
     nivel: yup
         .string()
         .label('Nível!'),
-        //.required(),
 
     etapa: yup
         .string()
         .label('Etapa!'),
-        //.required(),
     
     ano: yup
         .string()
         .label('Ano!'),
-        //.required(),
 
     unidade: yup
         .string()
         .label('Unidade temática!'),
-        //.required(),
 
     conhecimento: yup
         .string()
         .label('Objet de Conhecimento!')
-        // .required(),
 })
 
 
-
-const GerarAvaliacao = ({navigation}) => {
-    const [ dataEtapa, setDataEtapa] = useState([]);
-    
+const PlusQuestion = (props) => {
+ const {setVisible, isVisible,  getQuestoes } = props;
 
     const valoresIniciais = {
         status: '',
@@ -62,21 +55,24 @@ const GerarAvaliacao = ({navigation}) => {
 
 
     return(
-        <View style={Styles.body}>
-
-            <Nav>EPSILON</Nav>
-            <Info>GERAR AVALIAÇÃO</Info>
-
+        <Modal isVisible={isVisible} 
+        animationType={"fade"}
+        transparent={true}
+        onRequestClose={() => {
+            setVisible(!isVisible);
+        }}
+        >
+            <View style={Styles.centeredView}>
             <ScrollView 
-             style={Styles.main}
+             style={Styles.modalView}
              contentContainerStyle={Styles.ScrollStyle}
              >
                 <Formik
                 initialValues={valoresIniciais}
                 onSubmit={(values, { resetForm }) => {
-                    //alert(JSON.stringify(values)) resetForm: resetForm 
+                    setVisible(!isVisible)
                     resetForm(values)
-                    navigation.navigate('Avaliacao',{ values: values, listId: [], buscar: false}, )
+                    getQuestoes(values)
                 }}
                 validationSchema={validationSchema}
                 >
@@ -86,8 +82,6 @@ const GerarAvaliacao = ({navigation}) => {
 
                         <Text style={Styles.text} >Etapa</Text>
                         <SelectedEtapa
-                        setData={setDataEtapa}
-                        dataEtapa={dataEtapa}
                         formikKey={'etapa'}
                         formikProps={formikProps}
                         styleErro={Styles.styleErro}
@@ -154,28 +148,31 @@ const GerarAvaliacao = ({navigation}) => {
                 </Formik>
 
             </ScrollView>
-        </View>
+            </View>
+        </Modal>
     )
 };
 
 
 const Styles = StyleSheet.create({
 
-    body: {
-        flex: 1,
-        //backgroundColor: '#f8f8f8',
-        backgroundColor: '#e8f0ff',
-
-        fontSize: 14,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    main: {
-        flex: 1,
-        backgroundColor: '#f8f8f8',
-        width: '90%'
-    },
+    modalView: {
+        margin: 10,
+        backgroundColor: "white",
+        borderRadius: 15,
+        width: '95%', 
+        padding: 20,
+        //paddingBottom: 50,
+        //alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+        },
 
     ScrollStyle: {
         alignItems: 'center', 
@@ -210,7 +207,7 @@ const Styles = StyleSheet.create({
 
         width: '90%',
         height: 50,
-        marginVertical: '2%',
+        marginVertical: '3%',
 
 
         borderWidth: 2,
@@ -228,9 +225,15 @@ const Styles = StyleSheet.create({
     
     styleErro: {
         borderColor:'red'
-    }
+    },
+    centeredView: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+        width: '100%'
+      },
 
 });
 
 
-export default GerarAvaliacao;
+export default PlusQuestion;

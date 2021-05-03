@@ -47,7 +47,7 @@ function Sobre() {
         }
         catch(erro){
             //alert(erro);
-            alert('O correu um erro!');
+            //alert('O correu um erro!');
         }
     }
 

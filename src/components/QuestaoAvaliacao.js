@@ -4,10 +4,8 @@ import {
     Text, 
     TouchableOpacity, 
     StyleSheet,
-    Button,
     CheckBox,
 } from 'react-native';
-import Modal from 'react-native-modal';
 
 
 const filterText = (text) =>{
@@ -19,13 +17,13 @@ const filterText = (text) =>{
 
 
 export default function QuestaoAvaliacao(props) {
-    const { data, list, setList, id, setId, setVisibleQuestao, setDataQuestao} = props;
+    const { data, list, setList, id, setId, setVisibleQuestao,
+        setDataQuestao, selected} = props;
     
     let listId = [...list];
     let qids = [...id];
 
-    const [ visible, setVisible] = useState(false);
-    const [ isSelected, setSelection ] = useState(false);
+    const [ isSelected, setSelection ] = useState(selected);
     
     return (
         <View>
@@ -74,31 +72,6 @@ export default function QuestaoAvaliacao(props) {
                 </View>
             </TouchableOpacity>
 
-            {/* <Modal isVisible={ visible }>
-                <View style={ {backgroundColor: 'white', height: '50%', justifyContent: 'space-between'}}>
-                    <View style={styles.questao}>
-
-                        <View style={ {flexDirection: 'row'}}>
-                            <Text  style={ styles.textAp }>Área: </Text>
-                            <Text style={ styles.title }>{ data.area } </Text>
-                        </View>
-
-                        <View style={{marginVertical: 10}}>
-                            <Text style={ styles.textAp }>Pergunta:  </Text>
-                            <Text style={ styles.textPergunta } >{ data.pergunta } </Text>
-                        </View>
-
-                        <View style={{marginVertical: 10}}>
-                            <Text style={ styles.textAp}>Resposta:  </Text>
-                            <Text style={ styles.textPergunta }> { data.resposta } </Text>
-                        </View>
-                    </View>
-                    <TouchableOpacity onPress={() => { setVisible(false)}}>
-                        <Button color='#0b2639' title='Fechar' onPress={() => { setVisible(false)}}/>
-                    </TouchableOpacity>
-
-                </View>
-            </Modal> */}
         </View>
     )
 }

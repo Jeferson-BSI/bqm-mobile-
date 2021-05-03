@@ -1,12 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import { Text, View, StyleSheet, AsyncStorage } from 'react-native';
 import { Video } from 'expo-av';
-//import  Video  from 'react-native-video';
 
 import VideoPlayer from 'expo-video-player'
-
-import Api from '../components/Api';
 
 import Body from '../components/Body';
 import Nav from '../components/Nav';
@@ -37,7 +34,15 @@ function Inicio() {
 
 		        if (UserNivelDeAcesso == 'epsilon') {
 
-		            navigation.navigate('Epsilon', {token:UserToken})
+		            //navigation.navigate('Epsilon', {token:UserToken})
+                    navigation.reset({
+                        routes: [
+                          {
+                            name: 'Epsilon',
+                            params: {token:UserToken},
+                          },
+                        ],
+                    })
 		        }
 
 	    	} else {
@@ -51,6 +56,7 @@ function Inicio() {
 	}
 
 	React.useEffect(() => {
+
    		const unsubscribe = navigation.addListener('focus', () => {
    			CheckLogin()
 	    });
@@ -96,7 +102,7 @@ function Inicio() {
                         resizeMode: Video.RESIZE_MODE_CONTAIN,
                         isLooping: true,
                         source: {
-                        uri:  'http://10.0.2.2:8000/media/video.webm' //'https://bq.mat.br/media/video.webm',
+                        uri: 'https://bq.mat.br/media/video.webm' //'http://10.0.2.2:8000/media/video.webm' //'https://bq.mat.br/media/video.webm',
                         },
                     }}
                     width={300}

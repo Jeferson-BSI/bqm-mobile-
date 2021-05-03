@@ -6,7 +6,6 @@ import {
   TextInput, TouchableOpacity,
   ActivityIndicator,
   AsyncStorage,
-  Linking
 } from 'react-native';
 import Body from '../components/Body';
 import Nav from '../components/Nav';
@@ -27,13 +26,13 @@ const validationSchema = yup.object().shape({
     .string()
     .label('Email')
     .email()
-    .required(),
+    .required("Email é obrigatorio"),
 
   senha: yup
     .string()
     .label('Senha')
-    .required()
-    .min(8, 'Seems a bit short...')
+    .required('Senha é obrigatoria')
+    .min(8, 'Senha muito curta...')
     .max(20)
 });
 
@@ -56,7 +55,16 @@ function Entrar() {
 
             if (UserNivelDeAcesso == 'epsilon') {
 
-                navigation.navigate('Epsilon', {token:UserToken})
+              navigation.reset({
+               // index: 0,
+                routes: [
+                  {
+                    name: 'Epsilon',
+                    params: {token:UserToken},
+                  },
+                ],
+            })
+              //navigation.navigate('Epsilon', {token:UserToken})
             }
 
         } else {
@@ -84,9 +92,9 @@ function Entrar() {
   async function ApiGetUsuario(){
 
     const ApiGet = axios.create({
-      //baseURL: 'https://bq.mat.br/api/v1',
-       baseURL: 'http://10.0.2.2:8000/api/v1',//'https://beta.bq.mat.br/api/v1',
-      timeout: 30,
+      baseURL: 'https://bq.mat.br/api/v1',
+      //baseURL: 'http://10.0.2.2:8000/api/v1',//'https://beta.bq.mat.br/api/v1',
+      timeout: 100,
       headers: {'Authorization': 'Token ' + UserToken}
     });
     
@@ -105,7 +113,15 @@ function Entrar() {
 
         if (nivel_de_acesso == 'epsilon') {
 
-            navigation.navigate('Epsilon', {token:UserToken})
+         // navigation.navigate('Epsilon', {token:UserToken})
+            navigation.reset({
+              routes: [
+                {
+                  name: 'Epsilon',
+                  params: {token:UserToken},
+                },
+              ],
+          })
         } else {
           alert('Este aplicativo não possui acesso a este nivel de usuario')
         }
@@ -150,11 +166,19 @@ function Entrar() {
           UserId = ''+id
           
           ApiGetUsuario()
-          navigation.navigate('Epsilon', {token:UserToken})
+        //navigation.navigate('Epsilon', {token:UserToken})
+          navigation.reset({
+            routes: [
+              {
+                name: 'Epsilon',
+                params: {token:UserToken},
+              },
+            ],
+        })
           //alert(response.data.token)
          
         } catch (_err) {
-             alert('Não foi possivel salvar as informacoes em cache')
+             //alert('Não foi possivel salvar as informacoes em cache')
         }
 
      } else {
@@ -171,7 +195,7 @@ function Entrar() {
 
         setShouldShow(shouldShow)
         setLoginShow(loginShow)
-        alert(_err)
+        //alert(_err)
         //alert('Não foi possivel conectar ao servidor')
     }
   }
@@ -187,7 +211,8 @@ function Entrar() {
       <Main>
         <SvgXml style= {styles.bqmIcon} xml={bqmIcon} />
         <Formik 
-        initialValues={{email: 'epsilon@bq.mat.br', senha: '23571113'}}
+
+        initialValues={{email: '', senha: ''}}
         onSubmit={values => {
           //alert(JSON.stringify(values))
           handlesLogin(values)
@@ -249,7 +274,7 @@ function Entrar() {
                 <Text style={styles.texto}>Ainda não possui uma conta? 
                 </Text>
                 <TouchableOpacity
-                onPress={() => Linking.openURL('https://bq.mat.br/usuario/criar_conta/')}
+                onPress={() => navigation.navigate('Cadastro')}//Linking.openURL('https://bq.mat.br/usuario/criar_conta/')}
                 >
                   <Text style={styles.register}>Registra-se</Text>
                 </TouchableOpacity>

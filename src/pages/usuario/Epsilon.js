@@ -5,7 +5,6 @@ import {
     ScrollView, 
     Text, 
     AsyncStorage,
-    Button
 } from 'react-native';
 import axios from 'axios';
 
@@ -16,10 +15,10 @@ import InputModal from '../../components/InputModal';
 import OptionModal from '../../components/OptionModal';
 import deletarAvaliacao from '../../funções/deletarAvaliacao';
 import atualizarAvaliacao from '../../funções/atualizarAvaliacao';
-import { useNavigation } from '@react-navigation/native';
+
+
 
 function Epsilon({ route }) {
-    const navigation = useNavigation();
     const { token } = route.params;
     
     const [ provas, setProvas] = useState(null);
@@ -27,6 +26,8 @@ function Epsilon({ route }) {
     const [isVisibleTwo, setVisibleTwo ] = useState(false);
     const [obj, setObj ] = useState(null);
     const [nome, setNome ] = useState(null);
+    const [veri, setVeri ] = useState(false);
+
 
 
     const deletar = () =>{
@@ -46,10 +47,10 @@ function Epsilon({ route }) {
      }
  
     const ApiGet = axios.create({
-        //baseURL: 'https://bq.mat.br/api/v1',
+        baseURL: 'https://bq.mat.br/api/v1',
 
-        baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
-        timeout: 200,
+        //baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
+        timeout: 500,
         //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
         headers: {'Authorization': 'Token ' + token}
     });
@@ -78,15 +79,17 @@ function Epsilon({ route }) {
 
     async function getProva(){
         const id = await AsyncStorage.getItem('user_id')
-        console.log(token);
+        
         try{
             let page = 1
             let dados = []
+
             while (true) {
                 const response = await ApiGet.get(`/imprimir/?cadastro_pelo_usuario=${id}&page=${page}`)
                 const { results, next } = response.data
                 //alert(JSON.stringify(response.results))
                 dados = dados.concat(results)
+                setVeri(true)
 
                 if(next !== null){
                     page++}
@@ -96,11 +99,25 @@ function Epsilon({ route }) {
             setProvas(dados)
         }
         catch(erro) {
-            alert(erro)
+            //alert(erro)
         }
     };
 
-    useEffect(() =>{getProva()}, [])
+    const getRequest = () =>{
+        try{
+            getProva()
+        }
+        catch{
+            getProva()
+        }
+        finally{
+            if(!veri){
+                getProva()
+            }
+        }
+
+    }
+    useEffect(() =>{getRequest()}, [route])
 
     return (
         <View style={ styles.body }>
@@ -120,19 +137,6 @@ function Epsilon({ route }) {
                  contentContainerStyle={styles.conteiner}>
                     {
                         setCards()
-                    //  (provas !== null)
-                    //  ?provas.map(value =>(
-                    //     <CardProva 
-                    //      key={value.id} 
-                    //      value={value}
-                    //      //setId={setId}
-                    //      setObj={setObj}
-                    //      setVisible={setVisible}
-                    //      setVisibleTwo={setVisibleTwo}
-
-                    //     />
-                    //  ))
-                    //  :null
                     }
                 </ScrollView>
 
@@ -151,15 +155,6 @@ function Epsilon({ route }) {
                  onPress={atualizar}
                  onPress2={()=>setVisibleTwo(!isVisibleTwo)}
                 />
-                {/* <Button
-onPress={()=>{
-    alert(token)
-    console.log(token);
-    navigation.navigate('tests')}}
-  title="Learn More"
-  color="#841584"
-  accessibilityLabel="Learn more about this purple button"
-/> */}
             </View>
 
         </View>
