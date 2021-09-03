@@ -7,7 +7,7 @@ import {
     TextInput,
     KeyboardAvoidingView
 } from 'react-native';
-import Nav from '../../components/Nav';
+// import Nav from '../../components/Nav';
 import Info from '../../components/Info';
 import FormRow from '../../components/FormRow';
 
@@ -22,7 +22,7 @@ function ModSenha() {
     return (
         <KeyboardAvoidingView style={Styles.body}>
 
-            <Nav>EPSILON</Nav>
+            {/* <Nav>EPSILON</Nav> */}
 
             <Info>CONFIGURAÇÃO {'>'} MODIFICAR SENHA </Info>
 

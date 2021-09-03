@@ -8,7 +8,7 @@ import {AntDesign} from '@expo/vector-icons';
 
 
 export default function FabButtonAvaliacao(props){
-    const {list, isVisible, setVisible, setVisible2 } = props
+    const { setVisible2, list } = props
     
 
 
@@ -16,7 +16,11 @@ export default function FabButtonAvaliacao(props){
         <View style={[styles.conteiner, props.style]}>
             <TouchableWithoutFeedback
                 //onPress={()=>setVisible(!isVisible)}
-                onPress={()=>setVisible2(true)}
+                onPress={()=>{
+                    if(list.length > 0 ){
+                        setVisible2(true)
+                    }
+                }}
 
                 >
                 <View style={[styles.button, styles.menu]}>
@@ -49,6 +53,6 @@ const styles = StyleSheet.create({
     },
 
     menu: {
-        backgroundColor: '#00213b',
+        backgroundColor: '#286090',
     }
 });

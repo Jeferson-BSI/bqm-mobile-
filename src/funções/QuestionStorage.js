@@ -6,10 +6,10 @@ import axios from 'axios';
 
 async function QuestionStorage(op, setData){
     const token = await AsyncStorage.getItem('user_token')
-
     const ApiGet = axios.create({
-        baseURL: 'https://bq.mat.br/api/v1',
-        //baseURL: 'https://bq.mat.br/api/v1', //'https://bq.mat.br/api/v1',
+        baseURL: 'https://beta.bq.mat.br/api/v1',
+       // baseURL: 'https://bq.mat.br/api/v1',
+        //baseURL: 'https://bq.mat.br/api/v1',
         timeout: 200,
         //headers: {'Authorization': 'Token ' + "b6467054e25b883204ecfafbad2a37d450e1a74f"}
         headers: {'Authorization': 'Token ' + token}

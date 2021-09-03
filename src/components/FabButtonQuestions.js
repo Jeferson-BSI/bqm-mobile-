@@ -8,13 +8,14 @@ import {
 
 
 export default function FabButtonQuestions(props){
-    const {setselected, cont, setPlus, isSelected } = props
+    const {setselected, cont, setPlus, isSelected, setInfo, info } = props
 
     return(
         <View style={[styles.conteiner, props.style]}>
             <TouchableWithoutFeedback
                 onPress={()=>{
                     setPlus(false)
+                    setInfo(!info)
                     setselected(!isSelected)
                 }}
                 >
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#00213b',
+        shadowColor: '#286090',
         shadowOpacity: 0.3,
         shadowOffset: {
             height: 10
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     },
 
     menu: {
-        backgroundColor: '#00213b',
+        backgroundColor: '#286090',
     },
 
     text: {

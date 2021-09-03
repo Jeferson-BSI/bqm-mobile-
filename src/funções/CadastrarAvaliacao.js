@@ -8,6 +8,7 @@ async function CadastrarAvaliacao(listaId, setAvaliacao){
     let id = null;
     let qids = "";
     const horas = new Date();
+    //console.log(horas);
 
     for (let i in listaId){
         qids += listaId[i]
@@ -27,8 +28,9 @@ async function CadastrarAvaliacao(listaId, setAvaliacao){
 
     try{
         const ApiGet = axios.create({
+            baseURL: 'https://beta.bq.mat.br/api/v1/',
             //baseURL: 'http://10.0.2.2:8000/api/v1', //'https://bq.mat.br/api/v1',
-            baseURL: 'https://bq.mat.br/api/v1/',
+            //baseURL: 'https://bq.mat.br/api/v1/',
             timeout: 500,
             headers: {
                 'Accept': 'application/json',

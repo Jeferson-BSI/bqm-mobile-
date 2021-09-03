@@ -14,15 +14,17 @@ const FormRow = (props) => {
 
 const styles = StyleSheet.create({
     conteiner: {
+        flexDirection: 'row',
         backgroundColor: 'white',
         borderBottomWidth: 1,
-        borderBottomColor: '#0b2639',
+        //borderBottomColor: '#0b2639',
         marginTop: 5,
         marginBottom: 12,
         elevation: 1,
         //paddingHorizontal: 100,
         width: '90%',
         borderRadius: 10,
+        //alignItems: 'center'
     },
 });
 

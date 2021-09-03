@@ -1,16 +1,19 @@
 import React from 'react';
-import {WebView} from 'react-native-webview';
-import Nav from '../../components/Nav';
+import {  WebView } from 'react-native-webview';
+import TabGoBack from '../../components/TabGoBack';
+
 
 
 
 export default function ShowAvaliacao({route}){
-    const {token, qids} = route.params
-
+    const {token, qids, page} = route.params
+    
     return(
         <>
-            <Nav>EPSILON</Nav>
-            <WebView source={{uri: `https://bq.mat.br/usuario/epsilon/imprimir/avaliacao/mobile/?token=${token}&qids=${qids}`}}/>
+            <TabGoBack page={page} token={token} />
+            {/* <WebView source={{uri: `https://bq.mat.br/usuario/epsilon/imprimir/avaliacao/mobile/?token=${token}&qids=${qids}`}}/> */}
+            <WebView source={{uri: `https://beta.bq.mat.br/usuario/epsilon/imprimir/avaliacao/mobile/?token=${token}&qids=${qids}`}}/>
+
         </>
     );
 }

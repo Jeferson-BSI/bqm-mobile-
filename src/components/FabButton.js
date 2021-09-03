@@ -53,6 +53,7 @@ export default function FabButton(props){
                 texto={'Deseja excluir às questões?'} 
                 isVisible={isVisible}
                 onPress={Deletar}
+                setVisible={setVisible}
                 onPress2={()=>setVisible(!isVisible)}
             />
 
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#00213b',
+        shadowColor: '#286090',
         shadowOpacity: 0.3,
         shadowOffset: {
             height: 10
@@ -82,6 +83,6 @@ const styles = StyleSheet.create({
     },
 
     menu: {
-        backgroundColor: '#00213b',
+        backgroundColor: '#286090',
     }
 });

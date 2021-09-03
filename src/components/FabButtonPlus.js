@@ -25,6 +25,7 @@ export default function FabButtonPlus(props){
             <OptionModal 
             texto='Deseja Buscar mais questões no bacon de dados?'
             isVisible={plusVisible}
+            setVisible={setplusVisible}
             onPress={()=>{
                 //setData([...listaQuestoes])
                 setPlus(true)
@@ -63,6 +64,6 @@ const styles = StyleSheet.create({
     },
 
     menu: {
-        backgroundColor: '#00213b',
+        backgroundColor: '#286090',
     }
 });

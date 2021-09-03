@@ -1,19 +1,13 @@
-import React from 'react';
-import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    TouchableOpacity,
-} from 'react-native';
-import Nav from '../../components/Nav';
-import Info from '../../components/Info';
-import { SvgXml } from 'react-native-svg';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-function Bdquestoes({ navigation}) {
+import Info from "../../components/Info";
+import { SvgXml } from "react-native-svg";
 
-    //QuestionStorage('niveldedificuldade')
+function Bdquestoes({ navigation }) {
+  //QuestionStorage('niveldedificuldade')
 
-    const IconAdd = `      
+  const IconAdd = `      
         <svg width="100%" height="60%" viewBox="0 0 576 512">
             <path
             fill-rule="evenodd"
@@ -35,7 +29,7 @@ function Bdquestoes({ navigation}) {
         </defs>
         </svg> `;
 
-        const IconList = `      
+  const IconList = `      
         <svg width="100%" height="60%" viewBox="0 0 576 512">
             <path
             fill-rule="evenodd"
@@ -57,89 +51,79 @@ function Bdquestoes({ navigation}) {
         </defs>
         </svg> `;
 
+  return (
+    <View style={Styles.body}>
+      {/* <Nav>EPSILON</Nav> */}
+      <Info>BANCO DE QUESTÕES PRIVADO (BQP)</Info>
 
+      <View style={Styles.main}>
+        <TouchableOpacity
+          style={Styles.touchable}
+          onPress={() => navigation.navigate("AddQuestoes")}
+        >
+          <SvgXml style={Styles.iconStyle} xml={IconAdd} />
+          <Text style={Styles.iconText}> Adicionar questões </Text>
+        </TouchableOpacity>
 
-    return (
-        <View style={Styles.body}>
-            <Nav>EPSILON</Nav>
-            <Info>BANCO DE QUESTÕES PRIVADO (BQP)</Info>
-
-            <View style={Styles.main}>
-                <TouchableOpacity 
-                    style={Styles.touchable}
-                    onPress={() => navigation.navigate('AddQuestoes')}
-                >
-                    <SvgXml style={Styles.iconStyle} xml={ IconAdd } />
-                    <Text style={Styles.iconText}> Adicionar questões </Text> 
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                    style={Styles.touchable}
-                    onPress={() => navigation.navigate('ListarQuestoes')}
-                >
-                    <SvgXml style={Styles.iconStyle} xml={ IconList } />
-                    <Text style={[Styles.iconText, {paddingRight: 30}]}> Listar questões </Text>
-                </TouchableOpacity>
-
-            </View>
-        </View>
-)}
-
-
+        <TouchableOpacity
+          style={Styles.touchable}
+          onPress={() => navigation.navigate("ListarQuestoes")}
+        >
+          <SvgXml style={Styles.iconStyle} xml={IconList} />
+          <Text style={[Styles.iconText, { paddingRight: 30 }]}>
+            {" "}
+            Listar questões{" "}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
 
 const Styles = StyleSheet.create({
-    
-    body: {
-        flex: 1,
-        //backgroundColor: '#fff',
-        backgroundColor: '#e8f0ff',
+  body: {
+    flex: 1,
+    backgroundColor: "#fff", //'#e8f0ff',
 
-        fontSize: 14,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    
-    main: {
-        flex: 1,
-        //marginTop: 0,
-        alignItems: 'center',
-        width: '85%',
-        backgroundColor: '#f8f8f8',
-        borderRadius: 10,
-        marginBottom: 20
+    fontSize: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-    },
-    
-    touchable: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        marginTop: 40,
-        width: '80%',
-        maxHeight: '30%',
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#0b2639',
-        elevation: 5,
-        marginBottom: 30
-    },
-    
-    iconStyle: {
-        //backgroundColor: 'red',
-        //paddingLeft: '90%',//300,
-        paddingHorizontal: '45%'
-        
-    },
-    
-    iconText: {
-        fontSize: 17,
-        color:'#0b2639',
-        paddingRight: 20,
-        
-    },
-    
+  main: {
+    flex: 1,
+    alignItems: "center",
+    width: "85%",
+    backgroundColor: "#f0f0f5", //"#f8f8f8",
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+
+  touchable: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    marginTop: 40,
+    width: "80%",
+    maxHeight: "30%",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#0b2639",
+    elevation: 5,
+    marginBottom: 30,
+  },
+
+  iconStyle: {
+    paddingHorizontal: "45%",
+  },
+
+  iconText: {
+    fontSize: 17,
+    color: "#286090",
+    paddingRight: 20,
+    fontWeight: "700",
+  },
 });
-
 
 export default Bdquestoes;
